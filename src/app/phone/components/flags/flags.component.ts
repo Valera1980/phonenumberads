@@ -30,23 +30,30 @@ export class FlagsComponent implements OnInit, OnDestroy {
       alpha2Code: ['']
     });
     this.form.valueChanges
-    .pipe(
-      takeUntil(this.destroy$),
-      pluck('alpha2Code')
-    )
-    .subscribe(alpha2Code => {
-       this.selectedCountry = this.countries.find(c => c.alpha2Code === alpha2Code);
-    });
+      .pipe(
+        takeUntil(this.destroy$),
+        pluck('alpha2Code')
+      )
+      .subscribe(alpha2Code => {
+        this.selectedCountry = this.countries.find(c => c.alpha2Code === alpha2Code);
+      });
     this.countries$ = this._countryService.queryCountries()
       .pipe(
         map(countries => {
           this.countries = countries;
-          return countries.map(c => ({ label: c.name, icon: c.flag, value: c.alpha2Code }));
+          return countries.map(c => (
+            {
+              label: c.name,
+              icon: c.flag,
+              callingCode: c.callingCodes[0],
+              value: c.alpha2Code
+            }
+          ));
         })
       );
   }
   ngOnDestroy(): void {
-      this.destroy$.next();
+    this.destroy$.next();
   }
   get country(): AbstractControl {
     return this.form.get('country');

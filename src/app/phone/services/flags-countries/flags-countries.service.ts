@@ -22,10 +22,7 @@ export class FlagsCountriesService {
     }
     return this._http.get(this.url)
       .pipe(
-        map((d: ICountry[]) => {
-          this.countries = d;
-          return d.map(i => i);
-        })
+        map((d: ICountry[]) => d)
       );
   }
 }
