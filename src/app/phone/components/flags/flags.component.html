@@ -1,0 +1,25 @@
+<div [formGroup]="form">
+   <p>{{selectedCountry?.flag}}</p>
+    <p-dropdown 
+        [style]='{"width": "400px"}'
+        [filter]="true"  
+        [options]="countries$ | async" 
+        formControlName="alpha2Code" 
+        [showClear]="true"  
+        placeholder="Select...">
+       
+        <ng-template pTemplate="selectedItem">
+            <div class="template-wrapper" *ngIf="selectedCountry">
+                <img class="template-image" src="{{selectedCountry.flag}}" />
+                <div class="template-label">{{selectedCountry.name}}</div>
+            </div>
+        </ng-template>
+        <ng-template let-country pTemplate="item">
+            <div class="template-wrapper">
+                <img class="template-image" src="{{country.icon}}" />
+                <div class="template-label">{{country.label}}</div>
+            </div>
+        </ng-template>
+
+    </p-dropdown>
+</div>
