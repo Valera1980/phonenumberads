@@ -1,7 +1,6 @@
-<div [formGroup]="form">
-   <p>{{selectedCountry?.flag}}</p>
+<div [formGroup]="form" class="container">
     <p-dropdown 
-        [style]='{"width": "400px"}'
+        [style]='{"width": "100%"}'
         [filter]="true"  
         [options]="countries$ | async" 
         formControlName="alpha2Code" 

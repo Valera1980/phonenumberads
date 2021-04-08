@@ -1,7 +1,7 @@
+import { ICountry } from './../../models/country';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ICountry } from '../../models/country';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -22,7 +22,17 @@ export class FlagsCountriesService {
     }
     return this._http.get(this.url)
       .pipe(
-        map((d: ICountry[]) => d)
+        map((d: ICountry[]) => {
+          // https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png
+          const internationalNumber: ICountry =  {
+            flag: 'https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png',
+            callingCodes: [null],
+            alpha2Code: null,
+            name: 'no country'
+          };
+          this.countries = [ internationalNumber, ...d];
+          return this.countries;
+        })
       );
   }
 }

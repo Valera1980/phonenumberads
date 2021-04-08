@@ -1,1 +1,12 @@
-<p>phone-input works!</p>
+<div class="phone-input-wrapper" [formGroup]="form">
+    <div class="form-control-input-wrapper">
+        <app-flags></app-flags>
+    </div>
+    <div class="form-control-input-wrapper">
+        <input formControlName="pnumber" class="form-control"  pInputText/>
+    </div>
+    <div  class="form-control-wrapper">
+        <p-radioButton name="groupname" value="international"></p-radioButton>
+        <p-radioButton name="groupname" value="unknown"></p-radioButton>
+    </div>
+</div>
