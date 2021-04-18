@@ -1,12 +1,19 @@
 <div class="phone-input-wrapper" [formGroup]="form">
-    <div class="form-control-input-wrapper">
-        <app-flags></app-flags>
+    <div class="controls">
+        <div class="phone-input-wrapper__info"></div>
+        <div class="form-control-input-wrapper">
+            <app-flags [countryInput]="selectedCountryCode" (eventSelect)="eventSelectCountry($event)"></app-flags>
+        </div>
+        <div class="form-control-input-wrapper">
+            <input formControlName="pnumber" class="form-control" pInputText [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" />
+            <div class="copy-icon-wrapper">
+                <i  class="pi pi-copy" (click)="copyNumber($event)"></i>
+            </div>
+            <span class="validation-error" *ngIf="isShowErrorNamberValidation()">number is not valid for {{selectedCountryName}}</span>
+        </div>
     </div>
-    <div class="form-control-input-wrapper">
-        <input formControlName="pnumber" class="form-control"  pInputText/>
+    <div class="debug-info">
+        <p>current strategy = {{phoneDealStrategy?.getStrategyName()}}</p>
     </div>
-    <div  class="form-control-wrapper">
-        <p-radioButton name="groupname" value="international"></p-radioButton>
-        <p-radioButton name="groupname" value="unknown"></p-radioButton>
-    </div>
+
 </div>

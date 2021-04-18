@@ -1,9 +1,29 @@
+
 .phone-input-wrapper{
-    display: flex;
     align-items: center;
     padding: 5px;
+    position: absolute;
+}
+
+.copy-icon-wrapper{
+    position: relative;
+    left: 280px;
+    top: -28px;
+    :hover{
+        cursor: pointer;
+    }
+}
+.controls {
+    display: flex;
 }
 .form-control{
-    height: 35px;
+    height: 38px;
     width: 300px;
+}
+.validation-error{
+    position: relative;
+    top: -20px;
+    left: 0;
+    color: red;
+    font-size: 12px;
 }
