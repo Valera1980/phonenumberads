@@ -1,6 +1,4 @@
 import { ICountry } from './../../models/country';
-import { PhoneSelectedCountryStrategy } from './../classes/selectedcountry.strategy';
-import { PhoneNoCountryStrategy } from './../classes/nocountry.strategy';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { AsYouType, PhoneNumber } from 'libphonenumber-js/max';
@@ -9,7 +7,9 @@ import { parsePhoneNumberFromString, getPhoneCode, isValidPhoneNumber, CountryCo
 import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
-import { checkIsOnlyNumberOrPlusInInput, isPlusPresent, replaceNotNumber } from '../utils/plusinthephone';
+import { PhoneNoCountryStrategy } from '../../classes/nocountry.strategy';
+import { PhoneSelectedCountryStrategy } from '../../classes/selectedcountry.strategy';
+import { checkIsOnlyNumberOrPlusInInput, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
 
 @Component({
   selector: 'app-phone-input',
@@ -82,12 +82,13 @@ export class PhoneInputComponent implements OnInit {
   eventSelectCountry(data: ICountry): void {
     console.log('countryCode ', data.alpha2Code);
     console.log('this.selectedCountryCode', this.selectedCountryCode);
+    console.log('countryName', data.name);
     this.phoneDealStrategy = this.buildStrategy(data.alpha2Code);
+    this.selectedCountryName = data.name;
     if (this.selectedCountryCode === data.alpha2Code) {
       return;
     }
     this.selectedCountryCode = data.alpha2Code;
-    this.selectedCountryName = data.name;
     this.form.reset();
     // this.isNumberValid = this.checkIsNubmerValid(this.pnumber.value);
     // console.log(this.isNumberValid);
