@@ -7,7 +7,8 @@
         <div class="form-control-input-wrapper">
             <input formControlName="pnumber" class="form-control" pInputText [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" />
             <div class="copy-icon-wrapper">
-                <i  class="pi pi-copy" (click)="copyNumber($event)"></i>
+                <i  class="clear-icon pi pi-times" (click)="clearNumber()"></i>
+                <i  class="pi pi-copy copy-icon" (click)="copyNumber($event)"></i>
             </div>
             <span class="validation-error" *ngIf="isShowErrorNamberValidation()">number is not valid for {{selectedCountryName}}</span>
         </div>

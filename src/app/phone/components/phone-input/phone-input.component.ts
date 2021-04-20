@@ -53,7 +53,7 @@ export class PhoneInputComponent implements OnInit {
 
         }),
         tap((n: string) => {
-          if (this.phoneDealStrategy.needPutPlusInTheStart()) {
+          if (this.phoneDealStrategy.needPutPlusInTheStart() && !this.selectedCountryCode) {
             this.putPlusAtStartOFNumber(n);
           }
           // this.checkAndresetCountryCode(n);
@@ -79,6 +79,9 @@ export class PhoneInputComponent implements OnInit {
   }
   private _queryUsers(): Observable<any> {
     return this._users.queryGet();
+  }
+  clearNumber(): void {
+    this.form.reset();
   }
   eventQueryUsers(): void {
     this._queryUsers()
