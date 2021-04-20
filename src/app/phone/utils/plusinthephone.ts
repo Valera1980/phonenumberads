@@ -8,8 +8,8 @@ export function checkIsOnlyNumberOrPlusInInput(n: string): boolean {
 }
 
 export function replaceNotNumber(n: string): string {
-    if (!n) {
-        return '';
+    if (!n || n === '+') {
+        return '+';
     }
     const str = n.replace(n.substring(n.length - 1), '');
     return str;

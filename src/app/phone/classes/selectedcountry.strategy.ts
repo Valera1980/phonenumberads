@@ -13,7 +13,7 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
         return 'With country ' + this.countryCode;
     }
     needPutPlusInTheStart(): boolean {
-        return false;
+        return true;
     }
     validate(n: string): boolean {
         return isValidPhoneNumber(n, this.countryCode);

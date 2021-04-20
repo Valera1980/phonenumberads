@@ -1,9 +1,9 @@
 import { ICountry } from './../../models/country';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { AsYouType, PhoneNumber } from 'libphonenumber-js/max';
 // import getRegionCodeForNumber from 'libphonenumber-js/max';
-import { parsePhoneNumberFromString, getPhoneCode, isValidPhoneNumber, CountryCode, formatNumber } from 'libphonenumber-js';
+import { parsePhoneNumberFromString, getPhoneCode, isValidPhoneNumber, CountryCode, formatNumber, formatIncompletePhoneNumber } from 'libphonenumber-js';
 import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
@@ -27,10 +27,13 @@ export class PhoneInputComponent implements OnInit {
   phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy;
   constructor(
     private _fb: FormBuilder,
-    private _users: UserService
+    private _users: UserService,
+    private _cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+
+
     this.form = this._fb.group({
       pnumber: ['']
     });
@@ -38,6 +41,7 @@ export class PhoneInputComponent implements OnInit {
     this.pnumber.valueChanges
       .pipe(
         // allow only numbers and '+'
+        filter((n: string) => !!n && n.length > 0),
         map((n: string) => {
           console.log(n);
           if (checkIsOnlyNumberOrPlusInInput(n)) {
@@ -57,12 +61,15 @@ export class PhoneInputComponent implements OnInit {
       )
       .subscribe((inputNumber: string) => {
         console.log(inputNumber);
-        this.currentPhoneNumber = parsePhoneNumberFromString(inputNumber, this.selectedCountryCode || 'UA');
         console.log(this.currentPhoneNumber);
+        this.currentPhoneNumber = parsePhoneNumberFromString(inputNumber, this.selectedCountryCode);
+        // console.log(formatIncompletePhoneNumber(inputNumber));
         if (this.currentPhoneNumber) {
-          console.log();
+          console.log('>>>>>>>>>', this.currentPhoneNumber);
+          this.phoneDealStrategy = new PhoneSelectedCountryStrategy(this.form, this.currentPhoneNumber.country);
+          this.pnumber.patchValue(this.currentPhoneNumber.format('NATIONAL'), { emitEvent: false });
           this.selectedCountryCode = this.currentPhoneNumber.country || null;
-          this.isNumberValid = this.checkIsNubmerValid(inputNumber);
+          this.isNumberValid = this.checkIsNubmerValid(this.currentPhoneNumber.number.toString());
         }
       });
 
@@ -117,7 +124,7 @@ export class PhoneInputComponent implements OnInit {
     console.log(e);
     document.addEventListener('copy', (e: ClipboardEvent) => {
       e.clipboardData.setData('text/plain', (this.currentPhoneNumber ?
-        this.currentPhoneNumber.number.toString().replace('+', '') :
+        this.currentPhoneNumber.number :
         this.pnumber.value));
       e.preventDefault();
       document.removeEventListener('copy', null);
@@ -125,9 +132,16 @@ export class PhoneInputComponent implements OnInit {
     document.execCommand('copy');
   }
   checkIsNubmerValid(n: string): boolean {
-    return this.phoneDealStrategy.validate(n);
+    console.log(n);
+    console.log(this.phoneDealStrategy.getStrategyName());
+    const val = this.phoneDealStrategy.validate(n);
+    console.log(val);
+    return val;
+    // return this.phoneDealStrategy.validate(n);
   }
   isShowErrorNamberValidation(): boolean {
+    console.log('validation ', this.isNumberValid);
+    console.log('this.pnumber.touched ', this.pnumber.touched);
     return this.pnumber.dirty && !this.isNumberValid;
   }
   buildStrategy(countryCode: CountryCode): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
