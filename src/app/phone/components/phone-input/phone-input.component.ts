@@ -20,7 +20,7 @@ import { checkIsOnlyNumberOrPlusInInput, isPlusPresent, replaceNotNumber } from 
 export class PhoneInputComponent implements OnInit {
 
   form: FormGroup;
-  selectedCountryCode: CountryCode = null;
+  selectedCountryCode: CountryCode = undefined;
   selectedCountryName = '';
   isNumberValid = false;
   currentPhoneNumber: PhoneNumber;

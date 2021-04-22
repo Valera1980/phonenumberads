@@ -5,12 +5,14 @@
         [options]="optionsCountries" 
         formControlName="alpha2Code" 
         [showClear]="true"  
-        placeholder="Select...">
+       >
        
         <ng-template pTemplate="selectedItem">
             <div class="template-wrapper" *ngIf="selectedCountry">
                 <img class="template-image" src="{{selectedCountry.flag}}" />
-                <div class="template-call-code">{{selectedCountry.callingCodes[0] ? '(' + selectedCountry.callingCodes[0] + ')' : ''}}</div>
+                <div class="template-call-code">
+                    {{selectedCountry.callingCodes[0] ? '(' + selectedCountry.callingCodes[0] + ')' : ''}}
+                </div>
                 <div class="template-label">{{selectedCountry.name}}</div>
             </div>
         </ng-template>

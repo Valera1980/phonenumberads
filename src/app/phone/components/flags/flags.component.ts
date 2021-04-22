@@ -46,7 +46,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
 
 
     this.form = this._fb.group({
-      alpha2Code: [null]
+      alpha2Code: [undefined]
     });
 
     combineLatest([
@@ -57,6 +57,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
         filter((code, opt) => !!opt)
       )
       .subscribe(([code]) => {
+        console.log(code);
         this.form.patchValue({ alpha2Code: code });
       })
 
@@ -69,8 +70,9 @@ export class FlagsComponent implements OnInit, OnDestroy {
       .subscribe(alpha2Code => {
         console.log(alpha2Code);
         this.selectedCountry = this.countries.find(c => c.alpha2Code === alpha2Code);
-        
-        this.eventSelect.emit(this.selectedCountry);
+        if(alpha2Code !== undefined){
+          this.eventSelect.emit(this.selectedCountry);
+        }
       });
     this._countryService.queryCountries()
       .pipe(

@@ -24,13 +24,19 @@ export class FlagsCountriesService {
       .pipe(
         map((d: ICountry[]) => {
           // https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png
+          const noNumber: ICountry = {
+            flag: 'https://icons-for-free.com/iconfiles/png/512/loupe+magnifying+glass+search+icon-1320196420501324296.png',
+            callingCodes: [null],
+            alpha2Code: undefined,
+            name: 'autodetect country...'
+          };
           const internationalNumber: ICountry =  {
             flag: 'https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png',
             callingCodes: [null],
             alpha2Code: null,
             name: 'no country'
           };
-          this.countries = [ internationalNumber, ...d];
+          this.countries = [ noNumber,internationalNumber, ...d];
           return this.countries;
         })
       );
