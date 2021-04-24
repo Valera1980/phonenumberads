@@ -20,7 +20,7 @@
                 </i>
             </div>
             <div class="validation-error" *ngIf="isShowErrorNamberValidation()">
-                number is not valid  <span class="country-name-error-text" >{{selectedCountryName !== 'no country' ? ' for ' + selectedCountryName : ''}}</span>
+                {{getErorMessage()}}
             </div>
         </div>
     </div>

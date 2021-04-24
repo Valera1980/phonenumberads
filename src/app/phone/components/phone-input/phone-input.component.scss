@@ -1,5 +1,6 @@
 
 .phone-input-wrapper{
+    position: absolute;
     align-items: center;
     padding: 5px;
     margin-left: 10px;
@@ -31,23 +32,22 @@
     height: 38px;
     width: 300px;
 }
+
 .validation-error{
+    position: relative;
+    top: -20%;
     color: red;
     font-size: 12px;
-}
-.country-name-error-text{
-    position: relative;
-    top: 50%;
-    font-weight: bold;
 }
 .debug-info{
     margin-top: 200px;
 }
 .country-code-block{
     width: 50px;
-    height: 40px;
+    height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
+    border: 1px solid #ced4da;
 }

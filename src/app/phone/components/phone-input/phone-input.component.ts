@@ -2,15 +2,21 @@ import { AutodetectStrategy } from './../../classes/autodetect.strategy';
 import { ICountry, OwnCountryCode } from './../../models/country';
 import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { AsYouType, PhoneNumber } from 'libphonenumber-js/max';
-// import getRegionCodeForNumber from 'libphonenumber-js/max';
-import { parsePhoneNumberFromString, getPhoneCode, isValidPhoneNumber, CountryCode, formatNumber, formatIncompletePhoneNumber } from 'libphonenumber-js';
+import { 
+  parsePhoneNumberFromString, 
+  PhoneNumber, 
+  CountryCode, 
+  formatIncompletePhoneNumber, 
+  isPossiblePhoneNumber, 
+  parseNumber as parseNumberCustom,
+  getNumberType, 
+  parse } from 'libphonenumber-js';
 import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
 import { PhoneNoCountryStrategy } from '../../classes/nocountry.strategy';
 import { PhoneSelectedCountryStrategy } from '../../classes/selectedcountry.strategy';
-import { checkIsOnlyNumberOrPlusInInput, isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
+import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
 
 @Component({
   selector: 'app-phone-input',
@@ -179,6 +185,18 @@ export class PhoneInputComponent implements OnInit {
     // console.log('validation ', this.isNumberValid);
     // console.log('this.pnumber.touched ', this.pnumber.touched);
     return this.pnumber.dirty && !this.isNumberValid;
+  }
+  getErorMessage(): string {
+    if (this.phoneDealStrategy.getStrategy() === 'NO_COUNTRY') {
+      return 'number is not valid';
+    }
+    if (this.phoneDealStrategy.getStrategy() === 'SELECTED_COUNTRY') {
+      return `number is not valid for ${this.selectedCountryName}`;
+    }
+    if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
+      return `number is not valid`;
+    }
+    return 'unknown validation error';
   }
   buildStrategy(countryCode: OwnCountryCode): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
     if (countryCode === 'AUTODETECT') {
