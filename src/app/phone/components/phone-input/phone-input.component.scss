@@ -2,6 +2,7 @@
 .phone-input-wrapper{
     align-items: center;
     padding: 5px;
+    margin-left: 10px;
     position: absolute;
 }
 .copy-icon{
@@ -31,12 +32,22 @@
     width: 300px;
 }
 .validation-error{
-    position: relative;
-    top:-25%;
-    left: 0;
     color: red;
     font-size: 12px;
 }
 .country-name-error-text{
+    position: relative;
+    top: 50%;
     font-weight: bold;
+}
+.debug-info{
+    margin-top: 200px;
+}
+.country-code-block{
+    width: 50px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
 }

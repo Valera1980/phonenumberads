@@ -17,26 +17,27 @@ export class FlagsCountriesService {
   ) { }
 
   queryCountries(): Observable<ICountry[]> {
+    // casching
     if (this.countries.length) {
       return of(this.countries);
     }
     return this._http.get(this.url)
       .pipe(
-        map((d: ICountry[]) => {
+        map((countries: ICountry[]) => {
           // https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png
           const noNumber: ICountry = {
             flag: 'https://icons-for-free.com/iconfiles/png/512/loupe+magnifying+glass+search+icon-1320196420501324296.png',
             callingCodes: [null],
-            alpha2Code: undefined,
-            name: 'autodetect country...'
+            alpha2Code: 'AUTODETECT',
+            name: 'autodetect country. Just start text'
           };
           const internationalNumber: ICountry =  {
             flag: 'https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png',
             callingCodes: [null],
-            alpha2Code: null,
+            alpha2Code: 'NO_COUNTRY',
             name: 'no country'
           };
-          this.countries = [ noNumber,internationalNumber, ...d];
+          this.countries = [noNumber, internationalNumber, ...countries];
           return this.countries;
         })
       );

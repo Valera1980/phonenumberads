@@ -6,6 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { InputTextModule } from 'primeng/inputtext';
     DropdownModule,
     ReactiveFormsModule,
     RadioButtonModule,
-    InputTextModule
+    InputTextModule,
+    TooltipModule
   ],
   exports: [
     FlagsComponent,

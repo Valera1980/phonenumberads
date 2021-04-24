@@ -1,7 +1,8 @@
 import { CountryCode } from 'libphonenumber-js';
+export type OwnCountryCode = CountryCode | 'NO_COUNTRY' | 'AUTODETECT';
 export interface ICountry {
     readonly name: string;
-    readonly alpha2Code: CountryCode;
+    readonly alpha2Code: OwnCountryCode;
     readonly callingCodes: string[];
     readonly flag: string;
 }

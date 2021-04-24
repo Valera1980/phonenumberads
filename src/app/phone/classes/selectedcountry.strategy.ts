@@ -15,7 +15,7 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
         return this.strategy;
     }
     needPutPlusInTheStart(): boolean {
-        return true;
+        return false;
     }
     validate(n: string): boolean {
         return isValidPhoneNumber(n, this.countryCode);
