@@ -4,21 +4,22 @@ import { TStrategiesPhone } from "../models/strategies";
 import { checkIsOnlyNumberOrPlusInInput } from "../utils/plusinthephone";
 import { IPhoneDeals } from "./phone.works.interface";
 
-export class PhoneNoCountryStrategy implements IPhoneDeals {
+export class AutodetectStrategy implements IPhoneDeals {
     form: FormGroup;
     countryCode: CountryCode = null;
-    strategy: TStrategiesPhone = 'NO_COUNTRY';
+    allowedLength = 16;
+    strategy: TStrategiesPhone = 'AUTODETECT';
     constructor(form: FormGroup) {
         this.form = form;
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
     }
-      needPutPlusInTheStart(): boolean {
-        return false;
+    needPutPlusInTheStart(): boolean {
+        return true;
     }
     validate(s: string): boolean {
-        return s && s.length < 15 && s.length >= 3;
+        return checkIsOnlyNumberOrPlusInInput(s) && s.length === this.allowedLength
     }
 
 }

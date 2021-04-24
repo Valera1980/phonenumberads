@@ -136,7 +136,7 @@ export class PhoneInputComponent implements OnInit {
   }
   checkIsNubmerValid(n: string): boolean {
     console.log(n);
-    console.log(this.phoneDealStrategy.getStrategyName());
+    console.log(this.phoneDealStrategy.getStrategy());
     const val = this.phoneDealStrategy.validate(n);
     console.log(val);
     return val;

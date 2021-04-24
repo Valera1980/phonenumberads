@@ -12,7 +12,7 @@
                     (click)="clearNumber()">
                 </i>
                 <i  class="pi pi-copy copy-icon" 
-                    *ngIf="isNumberValid"
+                    *ngIf="isNumberValid && pnumber.value?.length"
                     (click)="copyNumber($event)">
                 </i>
             </div>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="debug-info">
-        <p>current strategy = {{phoneDealStrategy?.getStrategyName()}}</p>
+        <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
         <p>+380665566789</p>
     </div>
 
