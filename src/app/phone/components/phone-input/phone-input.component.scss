@@ -11,16 +11,15 @@
 }
 .copy-icon-wrapper{
     position: relative;
-    left: 255px;
-    top: -28px;
+    display: inline-block;
+    left: -40px;
     :hover{
         cursor: pointer;
     }
 }
 .clear-icon-wrapper{
     position: relative;
-    left: 280px;
-    top: -28px;
+    left: -50px;
     :hover{
         cursor: pointer;
     }
@@ -35,7 +34,7 @@
 
 .validation-error{
     position: relative;
-    top: -20%;
+    top: 5%;
     color: red;
     font-size: 12px;
 }
