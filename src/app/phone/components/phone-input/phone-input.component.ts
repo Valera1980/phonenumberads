@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { PhoneNoCountryStrategy } from '../../classes/nocountry.strategy';
 import { PhoneSelectedCountryStrategy } from '../../classes/selectedcountry.strategy';
 import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-phone-input',
@@ -38,7 +39,8 @@ export class PhoneInputComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _users: UserService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _toast: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -177,6 +179,7 @@ export class PhoneInputComponent implements OnInit {
       document.removeEventListener('copy', null);
     });
     document.execCommand('copy');
+    this._toast.add({ severity: 'info', summary: 'copied'});
   }
   checkIsNubmerValid(n: string): boolean {
     // console.log(n);

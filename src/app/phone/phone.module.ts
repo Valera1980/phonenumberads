@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlagsComponent } from './components/flags/flags.component';
@@ -7,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -20,11 +22,15 @@ import { TooltipModule } from 'primeng/tooltip';
     ReactiveFormsModule,
     RadioButtonModule,
     InputTextModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule
   ],
   exports: [
     FlagsComponent,
     PhoneInputComponent
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class PhoneModule { }

@@ -7,25 +7,40 @@
         formControlName="alpha2Code" 
         [showClear]="true"  
        >
-       
         <ng-template pTemplate="selectedItem">
             <div class="template-wrapper" *ngIf="selectedCountry">
-                <img class="template-image" 
+                <ng-container *ngIf="selectedCountry?.alpha2Code === 'AUTODETECT'">
+                    <i class="template-selected-item pi pi-compass" 
+                       pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right">
+                    </i>
+                </ng-container>
+                <ng-container *ngIf="selectedCountry?.alpha2Code === 'NO_COUNTRY'">
+                    <i class="template-selected-item pi pi-globe" pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right">
+                    </i>
+                </ng-container>
+                <img *ngIf="selectedCountry?.alpha2Code !== 'AUTODETECT' && selectedCountry?.alpha2Code !== 'NO_COUNTRY'" 
+                    class="template-image" 
                     src="{{selectedCountry.flag}}" 
                     pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right"/>
-                <!-- <div class="template-call-code">
-                    {{selectedCountry.callingCodes[0] ? '(' + selectedCountry.callingCodes[0] + ')' : ''}}
-                </div> -->
-                <!-- <div class="template-label">{{selectedCountry.name}}</div> -->
             </div>
         </ng-template>
         <ng-template let-country pTemplate="item">
             <div class="template-wrapper">
-                <img class="template-image" 
-                src="{{country.icon}}" 
-                pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right"/>
-                <!-- <div class="template-call-code">{{country.callingCode ? '(' + country.callingCode + ')' : ''}}</div> -->
-                <!-- <div class="template-label">{{country.label}}</div> -->
+                <ng-container *ngIf="country?.value === 'AUTODETECT'">
+                    <i class="pi pi-compass"
+                       pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right"
+                    >
+                  </i>
+                 </ng-container>
+                <ng-container *ngIf="country?.value === 'NO_COUNTRY'">
+                    <i class="pi pi-globe" pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right">
+                    </i>
+                </ng-container>
+                <img *ngIf="country.value !== 'AUTODETECT' && country.value !== 'NO_COUNTRY'" 
+                   class="template-image" 
+                   src="{{country.icon}}" 
+                   pTooltip="{{getTemplateTooltip(country)}}" 
+                   tooltipPosition="right"/>
             </div>
         </ng-template>
 
