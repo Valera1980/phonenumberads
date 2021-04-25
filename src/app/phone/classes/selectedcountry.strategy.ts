@@ -17,6 +17,7 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
         if(this.countryName.length > 20){
             return 'text number for ' + this.countryName.substring(0, 20) + '...';
         }
+        return 'text number for ' + this.countryName;
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
