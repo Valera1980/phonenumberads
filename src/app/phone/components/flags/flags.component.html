@@ -10,7 +10,9 @@
        
         <ng-template pTemplate="selectedItem">
             <div class="template-wrapper" *ngIf="selectedCountry">
-                <img class="template-image" src="{{selectedCountry.flag}}" pTooltip="{{selectedCountry.name}}" tooltipPosition="right"/>
+                <img class="template-image" 
+                    src="{{selectedCountry.flag}}" 
+                    pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right"/>
                 <!-- <div class="template-call-code">
                     {{selectedCountry.callingCodes[0] ? '(' + selectedCountry.callingCodes[0] + ')' : ''}}
                 </div> -->
@@ -19,7 +21,9 @@
         </ng-template>
         <ng-template let-country pTemplate="item">
             <div class="template-wrapper">
-                <img class="template-image" src="{{country.icon}}" pTooltip="{{country.label}}" tooltipPosition="right"/>
+                <img class="template-image" 
+                src="{{country.icon}}" 
+                pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right"/>
                 <!-- <div class="template-call-code">{{country.callingCode ? '(' + country.callingCode + ')' : ''}}</div> -->
                 <!-- <div class="template-label">{{country.label}}</div> -->
             </div>

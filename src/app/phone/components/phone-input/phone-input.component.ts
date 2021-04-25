@@ -29,6 +29,7 @@ export class PhoneInputComponent implements OnInit {
   form: FormGroup;
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
   selectedCountryName = '';
+  selectedCountryNativeName = '';
   selectedCountryCallingCode = '';
   isNumberValid = false;
   currentPhoneNumber: PhoneNumber;
@@ -145,6 +146,7 @@ export class PhoneInputComponent implements OnInit {
     // console.log('countryName', data.name);
     this.phoneDealStrategy = this.buildStrategy(data.alpha2Code);
     this.selectedCountryName = data.name;
+    this.selectedCountryNativeName = data.nativeName;
     this.selectedCountryCallingCode = data.callingCodes[0];
     if (this.selectedCountryCode === data.alpha2Code) {
       return;
@@ -191,7 +193,7 @@ export class PhoneInputComponent implements OnInit {
       return 'number is not valid';
     }
     if (this.phoneDealStrategy.getStrategy() === 'SELECTED_COUNTRY') {
-      return `number is not valid for ${this.selectedCountryName}`;
+      return `number is not valid for ${this.selectedCountryName} (${this.selectedCountryNativeName})`;
     }
     if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
       return `number is not valid`;

@@ -25,7 +25,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   private _optionsIsReady$ = new BehaviorSubject(false);
   @Input() set countryInput(c: any) {
     // console.log(c);
-    if(c){
+    if (c) {
       this._countryInput = c;
       this._countryCode$.next(c);
     }
@@ -57,7 +57,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
       .pipe(
         filter((code, opt) => !!opt)
       )
-      .subscribe(([code]) => {
+      .subscribe(([code, opt]) => {
         console.log(code);
         this.form.patchValue({ alpha2Code: code });
         this._cd.markForCheck();
@@ -72,7 +72,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
       .subscribe(alpha2Code => {
         // press button clear on combo
         if (alpha2Code === null) {
-          this.form.patchValue({ alpha2Code: 'AUTODETECT' },{emitEvent: false});
+          this.form.patchValue({ alpha2Code: 'AUTODETECT' }, { emitEvent: false });
           this.selectedCountry = this.countries.find(c => c.alpha2Code === 'AUTODETECT');
           this.eventSelect.emit(this.selectedCountry);
         } else {
@@ -90,7 +90,8 @@ export class FlagsComponent implements OnInit, OnDestroy {
               label: c.name,
               icon: c.flag,
               callingCode: c.callingCodes[0],
-              value: c.alpha2Code
+              value: c.alpha2Code,
+              nativeName: c.nativeName
             }
           ));
 
@@ -106,5 +107,23 @@ export class FlagsComponent implements OnInit, OnDestroy {
   }
   get country(): AbstractControl {
     return this.form.get('country');
+  }
+  getSelectedTooltip(): string {
+    if (this.selectedCountry.alpha2Code === 'AUTODETECT') {
+      return 'autodetect country. Just start text';
+    }
+    if (this.selectedCountry.alpha2Code === 'NO_COUNTRY') {
+      return 'no country'
+    }
+    return `${this.selectedCountry.name} ( ${this.selectedCountry.nativeName} )`;
+  }
+  getTemplateTooltip(country: any): string {
+    if (country.value === 'AUTODETECT') {
+      return 'autodetect country. Just start text';
+    }
+    if (country.value === 'NO_COUNTRY') {
+      return 'no country'
+    }
+    return `${country.label} ( ${country.nativeName} )`;
   }
 }
