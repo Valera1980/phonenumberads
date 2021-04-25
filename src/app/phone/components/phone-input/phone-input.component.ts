@@ -78,7 +78,10 @@ export class PhoneInputComponent implements OnInit {
 
           if (this.currentPhoneNumber) {
             console.log('>>>>>>>>>', this.currentPhoneNumber);
-            this.phoneDealStrategy = new PhoneSelectedCountryStrategy(this.form, this.currentPhoneNumber.country);
+            this.phoneDealStrategy = new PhoneSelectedCountryStrategy(
+              this.form, 
+              this.currentPhoneNumber.country, 
+              this.selectedCountryName);
             this.isNumberValid = this.checkIsNubmerValid(this.currentPhoneNumber.number.toString());
             this.selectedCountryCode = this.currentPhoneNumber.country;
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
@@ -206,7 +209,10 @@ export class PhoneInputComponent implements OnInit {
     } else if (countryCode === 'NO_COUNTRY') {
       return new PhoneNoCountryStrategy(this.form);
     } else {
-      return new PhoneSelectedCountryStrategy(this.form, countryCode);
+      return new PhoneSelectedCountryStrategy(this.form, countryCode, this.selectedCountryName);
     }
+  }
+  buildPlaceHolderPhoneInput(): string {
+    return this.phoneDealStrategy.getPlaceHolder();
   }
 }

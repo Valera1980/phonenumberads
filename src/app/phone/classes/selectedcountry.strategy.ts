@@ -7,9 +7,16 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     form: FormGroup;
     countryCode: CountryCode;
     strategy: TStrategiesPhone = 'SELECTED_COUNTRY';
-    constructor(form: FormGroup, countryCode: CountryCode = 'UA') {
+    countryName = '';
+    constructor(form: FormGroup, countryCode: CountryCode = 'UA', countryName = '') {
         this.form = form;
         this.countryCode = countryCode;
+        this.countryName = countryName;
+    }
+    getPlaceHolder(): string {
+        if(this.countryName.length > 20){
+            return 'text number for ' + this.countryName.substring(0, 20) + '...';
+        }
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;

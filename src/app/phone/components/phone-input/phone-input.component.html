@@ -8,7 +8,12 @@
              ({{selectedCountryCallingCode ? selectedCountryCallingCode : '???'}})
         </div>
         <div class="form-control-input-wrapper">
-            <input formControlName="pnumber" class="form-control" pInputText [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" />
+            <input class="form-control" 
+               formControlName="pnumber" 
+               pInputText 
+               placeholder="{{buildPlaceHolderPhoneInput()}}"
+               [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
+            />
             <div class="copy-icon-wrapper">
                 <i  class="clear-icon pi pi-times" 
                      *ngIf="pnumber.value?.length"

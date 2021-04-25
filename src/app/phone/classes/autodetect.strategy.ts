@@ -12,6 +12,9 @@ export class AutodetectStrategy implements IPhoneDeals {
     constructor(form: FormGroup) {
         this.form = form;
     }
+    getPlaceHolder(): string {
+        return 'input phone with code';
+    }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
     }

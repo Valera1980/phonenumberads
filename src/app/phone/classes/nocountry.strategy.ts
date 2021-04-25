@@ -11,6 +11,9 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
     constructor(form: FormGroup) {
         this.form = form;
     }
+    getPlaceHolder(): string {
+        return 'input any numbers'
+    }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
     }

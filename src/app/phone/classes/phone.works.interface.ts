@@ -10,5 +10,6 @@ export interface IPhoneDeals {
     needPutPlusInTheStart(): boolean;
     // TODO remove after debug
     getStrategy(): TStrategiesPhone;
+    getPlaceHolder(): string;
     
 }
