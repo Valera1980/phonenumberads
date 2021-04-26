@@ -1,15 +1,29 @@
 .container {
-    width: 100px;
+    width: 80px;
+}
+.find-clear-icon-wrapper{
+    position: absolute;
+    display: inline-block;
+}
+.find-clear-icon{
+    position: relative;
+    top:10px
 }
 .template-wrapper{
-    width: 80px;
+    width: 300px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .template-image {
     width: 30px;
     height: 20px;
     margin-right: 5px;
+}
+.template-image-custom {
+    width: 30px;
+    height: 20px;
+    margin-left: 10px;
 }
 .template-selected-item {
     height: 20px;
@@ -19,7 +33,9 @@
 }
 .template-label{
    font-size: 12px;
+   margin-left: 5px;
 }
+
 .template-call-code{
     margin-right: 5px;
     font-size: 14px;

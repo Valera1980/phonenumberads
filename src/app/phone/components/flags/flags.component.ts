@@ -1,12 +1,13 @@
 import { CountryCode } from 'libphonenumber-js';
 import { ICountry, OwnCountryCode } from './../../models/country';
 import { map, pluck, takeUntil, filter } from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { FlagsCountriesService } from '../../services/flags-countries/flags-countries.service';
 import { NullTemplateVisitor } from '@angular/compiler';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-flags',
@@ -35,6 +36,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   }
   // TODO add model to generic
   @Output() eventSelect = new EventEmitter<ICountry>();
+  @ViewChild('drop_down', {static: true}) private _dpopDown: any;
 
   constructor(
     private _countryService: FlagsCountriesService,
@@ -44,7 +46,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-
+    console.log(this._dpopDown);
 
     this.form = this._fb.group({
       alpha2Code: []
@@ -110,20 +112,23 @@ export class FlagsComponent implements OnInit, OnDestroy {
   }
   getSelectedTooltip(): string {
     if (this.selectedCountry.alpha2Code === 'AUTODETECT') {
-      return 'autodetect country. Just start text';
+      return 'автовыбор страны';
     }
     if (this.selectedCountry.alpha2Code === 'NO_COUNTRY') {
-      return 'no country'
+      return 'без страны';
     }
     return `${this.selectedCountry.name} ( ${this.selectedCountry.nativeName} )`;
   }
   getTemplateTooltip(country: any): string {
     if (country.value === 'AUTODETECT') {
-      return 'autodetect country. Just start text';
+      return 'автовыбор страны';
     }
     if (country.value === 'NO_COUNTRY') {
-      return 'no country'
+      return 'без страны';
     }
     return `${country.label} ( ${country.nativeName} )`;
+  }
+  resetFilter(drop_down: Dropdown): void {
+    drop_down.resetFilter();
   }
 }

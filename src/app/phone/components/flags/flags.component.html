@@ -1,12 +1,17 @@
 
 <div [formGroup]="form" class="container">
+   
     <p-dropdown 
+        #drop_down
         [style]='{"width": "100%"}'
         [filter]="true"  
         [options]="optionsCountries" 
         formControlName="alpha2Code" 
-        [showClear]="true"  
+        [filterPlaceholder]="'введите имя страны'"
+        [filterValue]="selectedCountry?.alpha2Code === 'AUTODETECT' ? '' : selectedCountry?.name"
+
        >
+  
         <ng-template pTemplate="selectedItem">
             <div class="template-wrapper" *ngIf="selectedCountry">
                 <ng-container *ngIf="selectedCountry?.alpha2Code === 'AUTODETECT'">
@@ -15,7 +20,8 @@
                     </i>
                 </ng-container>
                 <ng-container *ngIf="selectedCountry?.alpha2Code === 'NO_COUNTRY'">
-                    <i class="template-selected-item pi pi-globe" pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right">
+                    <i class="template-selected-item pi pi-globe" 
+                      pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right">
                     </i>
                 </ng-container>
                 <img *ngIf="selectedCountry?.alpha2Code !== 'AUTODETECT' && selectedCountry?.alpha2Code !== 'NO_COUNTRY'" 
@@ -27,20 +33,26 @@
         <ng-template let-country pTemplate="item">
             <div class="template-wrapper">
                 <ng-container *ngIf="country?.value === 'AUTODETECT'">
-                    <i class="pi pi-compass"
-                       pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right"
-                    >
-                  </i>
+                    <div class="country-group">
+                        <i class="template-image-custom pi pi-compass">
+                       </i>
+                       <span class="template-label">{{getTemplateTooltip(country)}}</span>
+                    </div>
+                    
+                    <i class="template-image-custom pi pi-times"></i>
                  </ng-container>
                 <ng-container *ngIf="country?.value === 'NO_COUNTRY'">
-                    <i class="pi pi-globe" pTooltip="{{getTemplateTooltip(country)}}" tooltipPosition="right">
-                    </i>
+                    <i class="template-image-custom pi pi-globe"></i>
+                    <span class="template-label">{{getTemplateTooltip(country)}}</span>
+                    <i class="template-image-custom pi pi-times"></i>
                 </ng-container>
-                <img *ngIf="country.value !== 'AUTODETECT' && country.value !== 'NO_COUNTRY'" 
-                   class="template-image" 
-                   src="{{country.icon}}" 
-                   pTooltip="{{getTemplateTooltip(country)}}" 
-                   tooltipPosition="right"/>
+                <ng-container *ngIf="country.value !== 'AUTODETECT' && country.value !== 'NO_COUNTRY'" >
+                    <img  class="template-image" 
+                       src="{{country.icon}}" 
+                    />
+                    <span class="template-label">{{getTemplateTooltip(country)}}</span>
+                    <i class="template-image-custom pi pi-times" (click)="resetFilter(drop_down)"></i>
+                </ng-container>
             </div>
         </ng-template>
 
