@@ -1,0 +1,9 @@
+{
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
+    "javascript.format.semicolons": "insert",
+    "javascript.preferences.quoteStyle": "single",
+    "eslint.format.enable": true,
+    "eslint.options": {
+    
+    }
+}
