@@ -7,13 +7,13 @@ export function checkIsOnlyNumberOrPlusInInput(n: string): boolean {
 }
 
 export function isOnlyAllowedSymbols(s: string, r: RegExp): boolean {
-   return r.test(s);
+    return r.test(s);
 }
 
 export function replaceNotNumber(n: string): string {
     if (!n || n === '+') {
         return '+';
     }
-    const str = n.replace(n.substring(n.length), '');
-    return n;
+    const str = n.replace(/[^0-9+ ]/g, '');
+    return str;
 }

@@ -35,7 +35,8 @@ export class PhoneInputComponent implements OnInit {
   isNumberValid = false;
   currentPhoneNumber: PhoneNumber;
   phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
-  regexpPlusDigitsSpaces = new RegExp(/^(?=.*[0-9])[+()0-9]+$/);
+  // regexpPlusDigits = new RegExp(/^(?=.*[0-9])[+()0-9]+$/);
+  regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
   constructor(
     private _fb: FormBuilder,
     private _users: UserService,
@@ -54,8 +55,8 @@ export class PhoneInputComponent implements OnInit {
         filter((n: string) => !!n && n.length > 0),
         map((n: string) => {
           // console.log(n);
-          // console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigitsSpaces));
-          if (isOnlyAllowedSymbols(n, this.regexpPlusDigitsSpaces)) {
+          console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigits));
+          if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
           const replacedString = replaceNotNumber(n);
