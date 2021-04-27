@@ -33,25 +33,19 @@
         <ng-template let-country pTemplate="item">
             <div class="template-wrapper">
                 <ng-container *ngIf="country?.value === 'AUTODETECT'">
-                    <div class="country-group">
                         <i class="template-image-custom pi pi-compass">
                        </i>
                        <span class="template-label">{{getTemplateTooltip(country)}}</span>
-                    </div>
-                    
-                    <i class="template-image-custom pi pi-times"></i>
                  </ng-container>
                 <ng-container *ngIf="country?.value === 'NO_COUNTRY'">
                     <i class="template-image-custom pi pi-globe"></i>
                     <span class="template-label">{{getTemplateTooltip(country)}}</span>
-                    <i class="template-image-custom pi pi-times"></i>
                 </ng-container>
                 <ng-container *ngIf="country.value !== 'AUTODETECT' && country.value !== 'NO_COUNTRY'" >
                     <img  class="template-image" 
                        src="{{country.icon}}" 
                     />
                     <span class="template-label">{{getTemplateTooltip(country)}}</span>
-                    <i class="template-image-custom pi pi-times" (click)="resetFilter(drop_down)"></i>
                 </ng-container>
             </div>
         </ng-template>

@@ -14,6 +14,6 @@ export function replaceNotNumber(n: string): string {
     if (!n || n === '+') {
         return '+';
     }
-    const str = n.replace(n.substring(n.length - 1), '');
-    return str;
+    const str = n.replace(n.substring(n.length), '');
+    return n;
 }

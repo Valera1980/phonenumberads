@@ -35,7 +35,7 @@ export class PhoneInputComponent implements OnInit {
   isNumberValid = false;
   currentPhoneNumber: PhoneNumber;
   phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
-  regexpPlusDigitsSpaces = new RegExp(/^(?=.*[0-9])[- +()0-9]+$/);
+  regexpPlusDigitsSpaces = new RegExp(/^(?=.*[0-9])[+()0-9]+$/);
   constructor(
     private _fb: FormBuilder,
     private _users: UserService,
@@ -61,6 +61,7 @@ export class PhoneInputComponent implements OnInit {
           const replacedString = replaceNotNumber(n);
           this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
           return replacedString;
+          // return n;
 
         }),
         tap((n: string) => {
@@ -179,7 +180,7 @@ export class PhoneInputComponent implements OnInit {
       document.removeEventListener('copy', null);
     });
     document.execCommand('copy');
-    this._toast.add({ severity: 'info', summary: 'copied'});
+    this._toast.add({ severity: 'info', summary: 'Скопировано'});
   }
   checkIsNubmerValid(n: string): boolean {
     // console.log(n);
@@ -196,15 +197,15 @@ export class PhoneInputComponent implements OnInit {
   }
   getErorMessage(): string {
     if (this.phoneDealStrategy.getStrategy() === 'NO_COUNTRY') {
-      return 'number is not valid';
+      return 'номер не валиден';
     }
     if (this.phoneDealStrategy.getStrategy() === 'SELECTED_COUNTRY') {
-      return `number is not valid for ${this.selectedCountryName} (${this.selectedCountryNativeName})`;
+      return `номер не валиден для ${this.selectedCountryName} (${this.selectedCountryNativeName})`;
     }
     if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
-      return `number is not valid`;
+      return `номер не валиден`;
     }
-    return 'unknown validation error';
+    return 'неизвесная ошибка';
   }
   buildStrategy(countryCode: OwnCountryCode): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
     if (countryCode === 'AUTODETECT') {

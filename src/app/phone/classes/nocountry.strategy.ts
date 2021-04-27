@@ -12,7 +12,7 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
         this.form = form;
     }
     getPlaceHolder(): string {
-        return 'input any numbers'
+        return 'введите любой номер'
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
@@ -21,7 +21,7 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
         return false;
     }
     validate(s: string): boolean {
-        return s && s.length < 15 && s.length >= 3;
+        return s && s.length <= 15 && s.length >= 3;
     }
 
 }

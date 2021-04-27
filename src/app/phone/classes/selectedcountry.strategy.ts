@@ -15,9 +15,9 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     }
     getPlaceHolder(): string {
         if(this.countryName.length > 20){
-            return 'text number for ' + this.countryName.substring(0, 20) + '...';
+            return 'введите номер для ' + this.countryName.substring(0, 20) + '...';
         }
-        return 'text number for ' + this.countryName;
+        return 'введите номер для ' + this.countryName;
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;

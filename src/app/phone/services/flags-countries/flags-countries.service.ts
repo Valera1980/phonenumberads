@@ -28,14 +28,14 @@ export class FlagsCountriesService {
             flag: 'https://icons-for-free.com/iconfiles/png/512/loupe+magnifying+glass+search+icon-1320196420501324296.png',
             callingCodes: [null],
             alpha2Code: 'AUTODETECT',
-            name: 'autodetect country. Just start text',
+            name: 'автовыбор страны',
             nativeName: ''
           };
           const internationalNumber: ICountry =  {
             flag: 'https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png',
             callingCodes: [null],
             alpha2Code: 'NO_COUNTRY',
-            name: 'no country',
+            name: 'без страны',
             nativeName: ''
           };
           this.countries = [noNumber, internationalNumber, ...countries];

@@ -130,5 +130,6 @@ export class FlagsComponent implements OnInit, OnDestroy {
   }
   resetFilter(drop_down: Dropdown): void {
     drop_down.resetFilter();
+    drop_down.focus();
   }
 }
