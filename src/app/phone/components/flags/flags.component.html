@@ -9,7 +9,6 @@
         formControlName="alpha2Code" 
         [filterPlaceholder]="'введите имя страны'"
         [filterValue]="selectedCountry?.alpha2Code === 'AUTODETECT' ? '' : selectedCountry?.name"
-
        >
   
         <ng-template pTemplate="selectedItem">
@@ -27,7 +26,8 @@
                 <img *ngIf="selectedCountry?.alpha2Code !== 'AUTODETECT' && selectedCountry?.alpha2Code !== 'NO_COUNTRY'" 
                     class="template-image" 
                     src="{{selectedCountry.flag}}" 
-                    pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right"/>
+                    pTooltip="{{getSelectedTooltip()}}" tooltipPosition="right"
+                />
             </div>
         </ng-template>
         <ng-template let-country pTemplate="item">

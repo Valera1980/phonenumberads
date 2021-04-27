@@ -1,4 +1,4 @@
-import { TStrategiesPhone } from './../models/strategies';
+import { TStrategiesPhone } from '../models/strategies';
 import { FormGroup } from '@angular/forms';
 import { CountryCode } from "libphonenumber-js";
 
@@ -8,7 +8,6 @@ export interface IPhoneDeals {
     countryCode: CountryCode;
     validate(value: string): boolean;
     needPutPlusInTheStart(): boolean;
-    // TODO remove after debug
     getStrategy(): TStrategiesPhone;
     getPlaceHolder(): string;
     

@@ -1,4 +1,4 @@
-import { AutodetectStrategy } from './../../classes/autodetect.strategy';
+import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from './../../models/country';
 import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
@@ -14,8 +14,8 @@ import {
 import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
-import { PhoneNoCountryStrategy } from '../../classes/nocountry.strategy';
-import { PhoneSelectedCountryStrategy } from '../../classes/selectedcountry.strategy';
+import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
+import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
 import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
 import { MessageService } from 'primeng/api';
 
@@ -35,7 +35,6 @@ export class PhoneInputComponent implements OnInit {
   isNumberValid = false;
   currentPhoneNumber: PhoneNumber;
   phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
-  // regexpPlusDigits = new RegExp(/^(?=.*[0-9])[+()0-9]+$/);
   regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
   constructor(
     private _fb: FormBuilder,

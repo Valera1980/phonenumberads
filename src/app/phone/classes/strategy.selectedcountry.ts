@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 import { TStrategiesPhone } from '../models/strategies';
-import { IPhoneDeals } from "./phone.works.interface";
+import { IPhoneDeals } from "./strategy-phones.interface";
 
 export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     form: FormGroup;

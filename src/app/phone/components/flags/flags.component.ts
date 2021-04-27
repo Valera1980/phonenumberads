@@ -34,9 +34,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   get countryInput(): any {
     return this._countryInput;
   }
-  // TODO add model to generic
   @Output() eventSelect = new EventEmitter<ICountry>();
-  @ViewChild('drop_down', {static: true}) private _dpopDown: any;
 
   constructor(
     private _countryService: FlagsCountriesService,
@@ -46,7 +44,6 @@ export class FlagsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log(this._dpopDown);
 
     this.form = this._fb.group({
       alpha2Code: []
@@ -127,9 +124,5 @@ export class FlagsComponent implements OnInit, OnDestroy {
       return 'без страны';
     }
     return `${country.label} ( ${country.nativeName} )`;
-  }
-  resetFilter(drop_down: Dropdown): void {
-    drop_down.resetFilter();
-    drop_down.focus();
   }
 }

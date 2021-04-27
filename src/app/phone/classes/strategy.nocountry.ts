@@ -2,27 +2,26 @@ import { FormGroup } from "@angular/forms";
 import { CountryCode } from "libphonenumber-js";
 import { TStrategiesPhone } from "../models/strategies";
 import { checkIsOnlyNumberOrPlusInInput } from "../utils/plusinthephone";
-import { IPhoneDeals } from "./phone.works.interface";
+import { IPhoneDeals } from "./strategy-phones.interface";
 
-export class AutodetectStrategy implements IPhoneDeals {
+export class PhoneNoCountryStrategy implements IPhoneDeals {
     form: FormGroup;
     countryCode: CountryCode = null;
-    allowedLength = 16;
-    strategy: TStrategiesPhone = 'AUTODETECT';
+    strategy: TStrategiesPhone = 'NO_COUNTRY';
     constructor(form: FormGroup) {
         this.form = form;
     }
     getPlaceHolder(): string {
-        return 'введите телефон с кодом';
+        return 'введите любой номер'
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
     }
-    needPutPlusInTheStart(): boolean {
-        return true;
+      needPutPlusInTheStart(): boolean {
+        return false;
     }
     validate(s: string): boolean {
-        return checkIsOnlyNumberOrPlusInInput(s) && s.length === this.allowedLength
+        return s && s.length <= 15 && s.length >= 3;
     }
 
 }
