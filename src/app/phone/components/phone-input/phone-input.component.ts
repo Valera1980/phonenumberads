@@ -1,16 +1,17 @@
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from './../../models/country';
-import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef, ViewChildren, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { 
-  parsePhoneNumberFromString, 
-  PhoneNumber, 
-  CountryCode, 
-  formatIncompletePhoneNumber, 
-  isPossiblePhoneNumber, 
+import {
+  parsePhoneNumberFromString,
+  PhoneNumber,
+  CountryCode,
+  formatIncompletePhoneNumber,
+  isPossiblePhoneNumber,
   parseNumber as parseNumberCustom,
-  getNumberType, 
-  parse } from 'libphonenumber-js';
+  getNumberType,
+  parse
+} from 'libphonenumber-js';
 import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
@@ -36,6 +37,8 @@ export class PhoneInputComponent implements OnInit {
   currentPhoneNumber: PhoneNumber;
   phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
   regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
+  cursorPosition = 0;
+  @ViewChild('phone_input') private _phoneInputControl: ElementRef<HTMLInputElement>;
   constructor(
     private _fb: FormBuilder,
     private _users: UserService,
@@ -59,7 +62,10 @@ export class PhoneInputComponent implements OnInit {
             return n;
           }
           const replacedString = replaceNotNumber(n);
+          const cursorPosition = this.calculateCursorPosition(n);
+          console.log('calc cursor ', cursorPosition);
           this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
+          this._phoneInputControl.nativeElement.setSelectionRange(cursorPosition, cursorPosition);
           return replacedString;
           // return n;
 
@@ -82,8 +88,8 @@ export class PhoneInputComponent implements OnInit {
           if (this.currentPhoneNumber) {
             console.log('>>>>>>>>>', this.currentPhoneNumber);
             this.phoneDealStrategy = new PhoneSelectedCountryStrategy(
-              this.form, 
-              this.currentPhoneNumber.country, 
+              this.form,
+              this.currentPhoneNumber.country,
               this.selectedCountryName);
             this.isNumberValid = this.checkIsNubmerValid(this.currentPhoneNumber.number.toString());
             this.selectedCountryCode = this.currentPhoneNumber.country;
@@ -140,12 +146,19 @@ export class PhoneInputComponent implements OnInit {
   clearNumber(): void {
     this.form.reset();
   }
+  // TODO или закончить с файрсторе или удалить
   eventQueryUsers(): void {
     this._queryUsers()
       .subscribe(u => {
         console.log(u);
       });
   }
+  /**
+   * 
+   * @param data ICountry
+   * @returns void
+   * событие выбора из комбо стран
+   */
   eventSelectCountry(data: ICountry): void {
     // console.log('countryCode ', data.alpha2Code);
     // console.log('this.selectedCountryCode', this.selectedCountryCode);
@@ -170,6 +183,11 @@ export class PhoneInputComponent implements OnInit {
       this.form.patchValue({ pnumber: '+' + n }, { emitEvent: false });
     }
   }
+  /**
+   * 
+   * @param e Event
+   * копирует номер в буфер обмена при нажатии на иконку "copy"
+   */
   copyNumber(e: any): void {
     console.log(e);
     document.addEventListener('copy', (e: ClipboardEvent) => {
@@ -180,7 +198,7 @@ export class PhoneInputComponent implements OnInit {
       document.removeEventListener('copy', null);
     });
     document.execCommand('copy');
-    this._toast.add({ severity: 'info', summary: 'Скопировано'});
+    this._toast.add({ severity: 'info', summary: 'Скопировано' });
   }
   checkIsNubmerValid(n: string): boolean {
     // console.log(n);
@@ -195,18 +213,26 @@ export class PhoneInputComponent implements OnInit {
     // console.log('this.pnumber.touched ', this.pnumber.touched);
     return this.pnumber.dirty && !this.isNumberValid;
   }
+  /**
+   * 
+   * @returns string
+   * возвращает ошибки валидации
+   */
   getErorMessage(): string {
-    if (this.phoneDealStrategy.getStrategy() === 'NO_COUNTRY') {
-      return 'номер не валиден';
-    }
-    if (this.phoneDealStrategy.getStrategy() === 'SELECTED_COUNTRY') {
-      return `номер не валиден для ${this.selectedCountryName} (${this.selectedCountryNativeName})`;
-    }
-    if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
-      return `номер не валиден`;
-    }
-    return 'неизвесная ошибка';
+     return this.phoneDealStrategy.getValidationerrorMsg(this.selectedCountryName,this.selectedCountryNativeName);
   }
+  /**
+   * 
+   * @param countryCode код выбранной страны
+   * @returns 
+   * Возворащает стртегию работы с номером, в зависимости от комбо со странами
+   * так как у нас есть условно три стратегии работы с номерами:
+   * - в комбобоксе выбрано -  автоопределение
+   * - в комбобоксе выбрано - без страны
+   * - в комбобоксе выбрано - какая-то конкретная страна
+   * то и различаются методы валидации, подтановки плюса в начало строки и т.д
+   *
+   */
   buildStrategy(countryCode: OwnCountryCode): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
     if (countryCode === 'AUTODETECT') {
       return new AutodetectStrategy(this.form);
@@ -216,7 +242,30 @@ export class PhoneInputComponent implements OnInit {
       return new PhoneSelectedCountryStrategy(this.form, countryCode, this.selectedCountryName);
     }
   }
+  /**
+   * 
+   * @returns placeholder
+   * каждая стратегия имее свой плейсхолдер
+   */
   buildPlaceHolderPhoneInput(): string {
     return this.phoneDealStrategy.getPlaceHolder();
+  }
+  /**
+   * 
+   * @param e event
+   * вычисление позации курсора в контроле
+   */
+  onKeyUp(e): void {
+
+    this.cursorPosition = e.target.selectionStart;
+  }
+  calculateCursorPosition(s: string): number {
+    // так как строка может иметь вид 066 123 4567 и курсор может быть например
+    // после четверки, то при нажатии на бекспейс -  строка форматируется методом
+    // this.currentPhoneNumber.format и пробелы  ичезнут. Т.е мы должны пересчитать 
+    // позицию курсора без учета пробелов
+    const stringBeforeCursor = s.substring(0, this.cursorPosition);
+    const spaces = stringBeforeCursor.match(/ /g);
+    return this.cursorPosition - spaces.length;
   }
 }

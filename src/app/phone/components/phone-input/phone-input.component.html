@@ -11,11 +11,14 @@
         </div>
         <div class="form-control-input-wrapper">
             <input class="form-control" 
+               #phone_input
                maxlength="16"
                formControlName="pnumber" 
                pInputText 
                placeholder="{{buildPlaceHolderPhoneInput()}}"
                [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
+               (keyup)="onKeyUp($event)"
+               (click)="onKeyUp($event)"
             />
             <div class="copy-icon-wrapper">
                 <i  class="clear-icon pi pi-times" 

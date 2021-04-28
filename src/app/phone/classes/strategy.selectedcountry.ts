@@ -13,6 +13,9 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
         this.countryCode = countryCode;
         this.countryName = countryName;
     }
+    getValidationerrorMsg(countryName?: string, countryNameNative?: string): string {
+        return `номер не валиден для ${countryName} (${countryNameNative})`;
+    }
     getPlaceHolder(): string {
         if(this.countryName.length > 20){
             return 'введите номер для ' + this.countryName.substring(0, 20) + '...';

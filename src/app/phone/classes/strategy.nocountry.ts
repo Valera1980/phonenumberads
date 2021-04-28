@@ -11,6 +11,9 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
     constructor(form: FormGroup) {
         this.form = form;
     }
+    getValidationerrorMsg(): string {
+        return `номер не валиден`;
+    }
     getPlaceHolder(): string {
         return 'введите любой номер'
     }

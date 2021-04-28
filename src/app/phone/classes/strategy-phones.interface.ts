@@ -10,5 +10,6 @@ export interface IPhoneDeals {
     needPutPlusInTheStart(): boolean;
     getStrategy(): TStrategiesPhone;
     getPlaceHolder(): string;
+    getValidationerrorMsg(countryName?: string, countryNameNative?: string): string;
     
 }
