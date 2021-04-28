@@ -4,11 +4,13 @@
     <p-dropdown 
         #drop_down
         [style]='{"width": "100%"}'
+        class="country-dropdown"
         [filter]="true"  
         [options]="optionsCountries" 
         formControlName="alpha2Code" 
         [filterPlaceholder]="'введите имя страны'"
         [filterValue]="selectedCountry?.alpha2Code === 'AUTODETECT' ? '' : selectedCountry?.name"
+        [emptyFilterMessage]="'ничего не найдено ...'"
        >
   
         <ng-template pTemplate="selectedItem">
