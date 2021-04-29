@@ -1,7 +1,7 @@
 import { CountryCode } from 'libphonenumber-js';
 import { ICountry, OwnCountryCode } from './../../models/country';
 import { map, pluck, takeUntil, filter } from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
@@ -21,6 +21,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   optionsCountries: SelectItem[] = [];
   countries = [];
   selectedCountry: ICountry = null;
+  isComboOpen = false;
   private _countryInput: any;
   private _countryCode$ = new BehaviorSubject(NullTemplateVisitor);
   private _optionsIsReady$ = new BehaviorSubject(false);
@@ -39,7 +40,8 @@ export class FlagsComponent implements OnInit, OnDestroy {
   constructor(
     private _countryService: FlagsCountriesService,
     private _fb: FormBuilder,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _renderer: Renderer2
   ) { }
 
 
@@ -124,5 +126,25 @@ export class FlagsComponent implements OnInit, OnDestroy {
       return 'без страны';
     }
     return `${country.label} ( ${country.nativeName} )`;
+  }
+  resetFilter(e, dd: Dropdown): void {
+    dd.resetFilter();
+    // const findInput = this._renderer.selectRootElement('.p-dropdown-filter');
+    const findInput = dd.filterViewChild.nativeElement;
+    if(findInput){
+      findInput.click();
+      findInput.focus();
+    }
+    // this._cd.detectChanges();
+    e.stopPropagation();
+  }
+  hideCombo(): void {
+    this.isComboOpen = false;
+  }
+  showCombo(): void {
+    this.isComboOpen = true;
+  }
+  isFindHasText(dd:Dropdown): boolean {
+    return !!dd._filterValue?.length;
   }
 }

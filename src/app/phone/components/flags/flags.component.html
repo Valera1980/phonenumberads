@@ -11,6 +11,8 @@
         [filterPlaceholder]="'введите имя страны'"
         [filterValue]="selectedCountry?.alpha2Code === 'AUTODETECT' ? '' : selectedCountry?.name"
         [emptyFilterMessage]="'ничего не найдено ...'"
+        (onHide)="hideCombo()"
+        (onShow)="showCombo()"
        >
   
         <ng-template pTemplate="selectedItem">
@@ -53,4 +55,9 @@
         </ng-template>
 
     </p-dropdown>
+    <div class="reset-button-container" *ngIf="isComboOpen && isFindHasText(drop_down)">
+        <i  class="pi pi-times reset-button" (click)="resetFilter($event, drop_down)">
+        </i>
+    </div>
+
 </div>

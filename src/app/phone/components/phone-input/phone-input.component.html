@@ -7,7 +7,7 @@
             <app-flags [countryInput]="selectedCountryCode" (eventSelect)="eventSelectCountry($event)"></app-flags>
         </div>
         <div class="country-code-block">
-             ({{selectedCountryCallingCode ? selectedCountryCallingCode : '???'}})
+             ({{selectedCountryCallingCode ? selectedCountryCallingCode : '...'}})
         </div>
         <div class="form-control-input-wrapper">
             <input class="form-control" 
