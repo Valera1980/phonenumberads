@@ -23,6 +23,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   selectedCountry: ICountry = null;
   isComboOpen = false;
   private _countryInput: any;
+  // TODO remove NullTemplateVisitor
   private _countryCode$ = new BehaviorSubject(NullTemplateVisitor);
   private _optionsIsReady$ = new BehaviorSubject(false);
   @Input() set countryInput(c: any) {
