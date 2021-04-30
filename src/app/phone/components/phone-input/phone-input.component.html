@@ -17,8 +17,6 @@
                pInputText 
                placeholder="{{buildPlaceHolderPhoneInput()}}"
                [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
-               (keyup)="onKeyUp($event)"
-               (click)="onKeyUp($event)"
             />
             <div class="copy-icon-wrapper">
                 <i  class="clear-icon pi pi-times" 
@@ -37,8 +35,9 @@
     </div>
     <div class="debug-info">
         <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
-        <p>+380665566789</p>
+        <p>+380661234567</p>
         <p>+79123456789</p>
+        <p>string status: {{stringIncrease ? 'строка увеличивается' : 'строка уменьшается'}}</p>
     </div>
 
 </div>

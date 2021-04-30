@@ -12,7 +12,7 @@ import {
   getNumberType,
   parse
 } from 'libphonenumber-js';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, pairwise, startWith, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
@@ -28,17 +28,18 @@ import { MessageService } from 'primeng/api';
 })
 export class PhoneInputComponent implements OnInit {
 
+  currentPhoneNumber: PhoneNumber;
+  cursorPosition = 0;
   form: FormGroup;
+  isNumberValid = false;
+  phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
+  regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
+  selectedCountryCallingCode = '';
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
   selectedCountryName = '';
   selectedCountryNativeName = '';
-  selectedCountryCallingCode = '';
-  isNumberValid = false;
-  currentPhoneNumber: PhoneNumber;
-  phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
-  regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
-  cursorPosition = 0;
-  @ViewChild('phone_input') private _phoneInputControl: ElementRef<HTMLInputElement>;
+  stringIncrease = false;
+  @ViewChild('phone_input', { static: true }) private _phoneInputControl: ElementRef;
   constructor(
     private _fb: FormBuilder,
     private _users: UserService,
@@ -48,6 +49,7 @@ export class PhoneInputComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this._phoneInputControl.nativeElement.focus();
     this.form = this._fb.group({
       pnumber: ['']
     });
@@ -55,16 +57,35 @@ export class PhoneInputComponent implements OnInit {
     this.pnumber.valueChanges
       .pipe(
         filter((n: string) => !!n && n.length > 0),
+        // tap((n) => console.log(n)),
+        // startWith(''),
+        // pairwise(),
+        // map(([prev, curr]) => {
+        //   console.log('++++++++++++++++++++++++++++')
+        //   const prevCopy = prev;
+        //   const currCopy = curr;
+        //   console.log('prevCopy', prevCopy);
+        //   console.log('currCopy', currCopy);
+        //   if (prevCopy.trim().length < currCopy.trim().length) {
+        //     this.stringIncrease = true;
+        //   } else {
+        //     this.stringIncrease = false;
+        //   }
+        //   return curr;
+        // }),
+        //         tap((n) => console.log(n)),
         map((n: string) => {
           // console.log(n);
+          const cursorPosition = this.calculateCursorPosition(n);
+          console.log('current cursor ', cursorPosition);
           console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigits));
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
           const replacedString = replaceNotNumber(n);
-          const cursorPosition = this.calculateCursorPosition(n);
-          console.log('calc cursor ', cursorPosition);
+
           this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
+         
           this._phoneInputControl.nativeElement.setSelectionRange(cursorPosition, cursorPosition);
           return replacedString;
           // return n;
@@ -80,6 +101,7 @@ export class PhoneInputComponent implements OnInit {
       .subscribe((inputNumber: string) => {
 
         console.log(inputNumber);
+        console.log(this._phoneInputControl);
         // console.log(this.currentPhoneNumber);
         this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(inputNumber, this.selectedCountryCode);
 
@@ -99,8 +121,10 @@ export class PhoneInputComponent implements OnInit {
                 .replace(/-/g, ' ')
                 .replace('(', ' ')
                 .replace(')', ' ')
-              this.pnumber.patchValue(this.removeFirstZero(numberFormatted, this.selectedCountryCode),
+              this.pnumber.patchValue(this.removeFirstZero(numberFormatted.trim(), this.selectedCountryCode),
                 { emitEvent: false });
+              // если поле вставили копипастом
+              this.cursorPosition = this.getRawCursorPosition();
             }
           }
         } else {
@@ -219,7 +243,7 @@ export class PhoneInputComponent implements OnInit {
    * возвращает ошибки валидации
    */
   getErorMessage(): string {
-     return this.phoneDealStrategy.getValidationerrorMsg(this.selectedCountryName,this.selectedCountryNativeName);
+    return this.phoneDealStrategy.getValidationerrorMsg(this.selectedCountryName, this.selectedCountryNativeName);
   }
   /**
    * 
@@ -250,22 +274,43 @@ export class PhoneInputComponent implements OnInit {
   buildPlaceHolderPhoneInput(): string {
     return this.phoneDealStrategy.getPlaceHolder();
   }
-  /**
-   * 
-   * @param e event
-   * вычисление позации курсора в контроле
-   */
-  onKeyUp(e): void {
 
-    this.cursorPosition = e.target.selectionStart;
-  }
-  calculateCursorPosition(s: string): number {
-    // так как строка может иметь вид 066 123 4567 и курсор может быть например
+  calculateCursorPosition(st: string): number {
+    const s = st.trim();
+    if (s.startsWith('+') && s.length === 1) {
+      return 1;
+    }
+    // (cursor here)66 999 5655 || 66 999 5655(cursor here). 
+    // Если курсор в начале или в конце - то там его и оставляем
+    if (this.cursorPosition === 0 || s.length === this.getRawCursorPosition()) {
+      return this.getRawCursorPosition();
+    }
+    // так как строка может иметь вид 066 123 4(cursor here)567 и курсор может быть например
     // после четверки, то при нажатии на бекспейс -  строка форматируется методом
     // this.currentPhoneNumber.format и пробелы  ичезнут. Т.е мы должны пересчитать 
     // позицию курсора без учета пробелов
-    const stringBeforeCursor = s.substring(0, this.cursorPosition);
-    const spaces = stringBeforeCursor.match(/ /g);
-    return this.cursorPosition - spaces.length;
+
+    // вычисление кол-ва пробелов до курсора
+    const stringBeforeCursor = s.substring(0, this.getRawCursorPosition());
+    console.log('stringBeforeCursor ', stringBeforeCursor);
+    const spaces = stringBeforeCursor.match(/ /g) ?? [];
+    console.log('spaces ', spaces);
+
+    //если строка уменьшается - то надо сместить курсор влево иначе -  вправо
+    // текущая строка - надо взять что уже хранится в памяти - т.е отформатированный номер, 
+    // убрать с него пробелы и сравнить с тем что пришло
+    const storedString = this.currentPhoneNumber?.nationalNumber ?? s; 
+    console.log('string ', s.replace(/ /g, ''));
+    console.log('number ', storedString);
+    console.log('cursor ', this.getRawCursorPosition());
+    // строка ввод уменьшилась
+    if(storedString.length > s.length){
+      return this.getRawCursorPosition() - spaces.length - 1;
+    }
+    return this.getRawCursorPosition() - spaces.length;
+  
+  }
+  getRawCursorPosition(): number {
+    return this._phoneInputControl.nativeElement.selectionEnd;
   }
 }
