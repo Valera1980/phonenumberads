@@ -57,28 +57,10 @@ export class PhoneInputComponent implements OnInit {
     this.pnumber.valueChanges
       .pipe(
         filter((n: string) => !!n && n.length > 0),
-        // tap((n) => console.log(n)),
-        // startWith(''),
-        // pairwise(),
-        // map(([prev, curr]) => {
-        //   console.log('++++++++++++++++++++++++++++')
-        //   const prevCopy = prev;
-        //   const currCopy = curr;
-        //   console.log('prevCopy', prevCopy);
-        //   console.log('currCopy', currCopy);
-        //   if (prevCopy.trim().length < currCopy.trim().length) {
-        //     this.stringIncrease = true;
-        //   } else {
-        //     this.stringIncrease = false;
-        //   }
-        //   return curr;
-        // }),
-        //         tap((n) => console.log(n)),
         map((n: string) => {
-          // console.log(n);
           const cursorPosition = this.calculateCursorPosition(n);
-          console.log('current cursor ', cursorPosition);
-          console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigits));
+          // console.log('current cursor ', cursorPosition);
+          // console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigits));
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
@@ -101,7 +83,7 @@ export class PhoneInputComponent implements OnInit {
       .subscribe((inputNumber: string) => {
 
         console.log(inputNumber);
-        console.log(this._phoneInputControl);
+        // console.log(this._phoneInputControl);
         // console.log(this.currentPhoneNumber);
         this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(inputNumber, this.selectedCountryCode);
 
@@ -171,12 +153,12 @@ export class PhoneInputComponent implements OnInit {
     this.form.reset();
   }
   // TODO или закончить с файрсторе или удалить
-  eventQueryUsers(): void {
-    this._queryUsers()
-      .subscribe(u => {
-        console.log(u);
-      });
-  }
+  // eventQueryUsers(): void {
+  //   this._queryUsers()
+  //     .subscribe(u => {
+  //       console.log(u);
+  //     });
+  // }
   /**
    * 
    * @param data ICountry
@@ -213,7 +195,7 @@ export class PhoneInputComponent implements OnInit {
    * копирует номер в буфер обмена при нажатии на иконку "copy"
    */
   copyNumber(e: any): void {
-    console.log(e);
+    // console.log(e);
     document.addEventListener('copy', (e: ClipboardEvent) => {
       e.clipboardData.setData('text/plain', (this.currentPhoneNumber ?
         this.currentPhoneNumber.number :
@@ -292,17 +274,15 @@ export class PhoneInputComponent implements OnInit {
 
     // вычисление кол-ва пробелов до курсора
     const stringBeforeCursor = s.substring(0, this.getRawCursorPosition());
-    console.log('stringBeforeCursor ', stringBeforeCursor);
+    // console.log('stringBeforeCursor ', stringBeforeCursor);
     const spaces = stringBeforeCursor.match(/ /g) ?? [];
-    console.log('spaces ', spaces);
+    // console.log('spaces ', spaces);
 
     //если строка уменьшается - то надо сместить курсор влево иначе -  вправо
     // текущая строка - надо взять что уже хранится в памяти - т.е отформатированный номер, 
     // убрать с него пробелы и сравнить с тем что пришло
     const storedString = this.currentPhoneNumber?.nationalNumber ?? s; 
-    console.log('string ', s.replace(/ /g, ''));
-    console.log('number ', storedString);
-    console.log('cursor ', this.getRawCursorPosition());
+   
     // строка ввод уменьшилась
     if(storedString.length > s.length){
       return this.getRawCursorPosition() - spaces.length - 1;
