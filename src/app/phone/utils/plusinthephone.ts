@@ -1,4 +1,4 @@
-export function isPlusPresent(s: string) {
+export function isPlusPresent(s: string): boolean {
     return s.startsWith('+');
 }
 
