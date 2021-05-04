@@ -29,14 +29,16 @@ export class FlagsCountriesService {
             callingCodes: [null],
             alpha2Code: 'AUTODETECT',
             name: 'автовыбор страны',
-            nativeName: ''
+            nativeName: '',
+            numericCode: null
           };
           const internationalNumber: ICountry =  {
             flag: 'https://cdn3.iconfinder.com/data/icons/mobile-phone-7/500/mobile-phone-call_6-512.png',
             callingCodes: [null],
             alpha2Code: 'NO_COUNTRY',
             name: 'без страны',
-            nativeName: ''
+            nativeName: '',
+            numericCode: null
           };
           this.countries = [noNumber, internationalNumber, ...countries];
           return this.countries;

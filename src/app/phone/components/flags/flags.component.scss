@@ -55,4 +55,11 @@
       opacity: 1;
     }
   }
+  &__icon-wrapper {
+        :hover {
+            cursor: pointer;
+            color: rgb(45, 106, 238);
+            transform: scale(1.1);
+        }
+    }
 }

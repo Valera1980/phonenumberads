@@ -6,4 +6,5 @@ export interface ICountry {
     readonly alpha2Code: OwnCountryCode;
     readonly callingCodes: string[];
     readonly flag: string;
+    readonly numericCode: string;
 }

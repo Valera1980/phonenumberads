@@ -32,6 +32,7 @@ import { TemplateCountryComponent } from './components/template-country/template
   exports: [
     FlagsComponent,
     PhoneInputComponent,
+    InputTextModule,
   ],
   providers: [
     MessageService

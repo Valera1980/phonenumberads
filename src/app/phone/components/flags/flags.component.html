@@ -31,8 +31,11 @@
         </ng-template>
 
     </p-dropdown>
-        <i *ngIf="isComboOpen && isFindHasText(drop_down)" 
-          class="pi pi-times countries-container__reset-button" (click)="resetFilter($event, drop_down)">
-        </i>
+        <div class="countries-container__icon-wrapper">
+             <i *ngIf="isComboOpen && isFindInputHasText(drop_down)" 
+               class="pi pi-times countries-container__reset-button" (click)="resetFilter($event, drop_down)">
+            </i>
+        </div>
+       
 
 </div>

@@ -8,6 +8,7 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from "@angular/fire";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { ProfileFormComponent } from './profile-form/profile-form.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmfcnwI-1x5HrUGSX_KBXlZ--ZRCEC-GI",
@@ -21,7 +22,8 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ProfileFormComponent
   ],
   imports: [
     BrowserModule,

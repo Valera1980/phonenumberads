@@ -2,8 +2,13 @@
 
 <div class="phone-input-wrapper" [formGroup]="form">
     <div class="phone-input-wrapper__controls">
-        <div class="phone-input-wrapper__info"></div>
-            <app-flags [countryInput]="selectedCountryCode" (eventSelect)="eventSelectCountry($event)"></app-flags>
+        <div class="phone-input-wrapper__info">
+            <app-flags 
+                [isDisabled]="isDisabled"
+                [countryInput]="selectedCountryCode" 
+                (eventSelect)="eventSelectCountry($event)">
+            </app-flags>
+        </div>
         <div class="phone-input-wrapper__country-code-block">
              ({{selectedCountryCallingCode ? selectedCountryCallingCode : '...'}})
         </div>
@@ -15,14 +20,25 @@
                placeholder="{{buildPlaceHolderPhoneInput()}}"
                [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
             />
-                <i  class="pi pi-times phone-input-wrapper__clear-icon" 
-                     *ngIf="pnumber.value?.length"
-                    (click)="clearNumber()">
-                </i>
-                <i  class="pi pi-copy phone-input-wrapper__copy-icon" 
+                <div class="phone-input-wrapper__icon-wrapper">
+                    <i  class="pi pi-times phone-input-wrapper__clear-icon" 
+                        *ngIf="pnumber.value?.length && pnumber.enabled"
+                        (click)="clearNumber()">
+                    </i>
+                </div>
+               
+                <div class="phone-input-wrapper__icon-wrapper">
+                  <i  class="pi pi-copy phone-input-wrapper__copy-icon" 
                     *ngIf="isNumberValid && pnumber.value?.length"
                     (click)="copyNumber($event)">
-                </i>
+                 </i>
+                </div>
+               
+                <div class="phone-input-wrapper__icon-wrapper">
+                  <i class="pi pi-trash phone-input-wrapper__trash-icon" (click)="remove($event)">
+                  </i>
+                </div>
+               
             <div class="phone-input-wrapper__validation-error" *ngIf="isShowErrorNamberValidation()">
                 {{getErorMessage()}}
             </div>
@@ -31,7 +47,6 @@
         <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
         <p>+380661234567</p>
         <p>+79123456789</p>
-        <p>string status: {{stringIncrease ? 'строка увеличивается' : 'строка уменьшается'}}</p>
     </div>
 
 </div>

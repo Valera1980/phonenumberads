@@ -1,0 +1,23 @@
+<div class="profile-form-container" [formGroup]="form">
+    <div class="profile-form-container__control-wrapper">
+        <label class="profile-form-container__control" for="name_input">Имя пользователя</label>
+        <input class="profile-form-container__label" 
+          formControlName="name"
+          #name_input 
+          type="text" 
+          pInputText>
+    </div>
+    <div class="profile-form-container__control-wrapper">
+        <label  class="profile-form-container__control" for="email_input">email</label>
+        <input class="profile-form-container__label" 
+        formControlName="email"
+         #email_input 
+         type="text" 
+         pInputText>
+    </div>
+       <app-phone-input formControlName="phone" [setFocus]="true">
+      </app-phone-input> 
+   
+
+</div>
+

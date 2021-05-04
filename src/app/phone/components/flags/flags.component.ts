@@ -1,7 +1,7 @@
 import { ICountry } from './../../models/country';
 import { map, pluck, takeUntil, filter } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { FlagsCountriesService } from '../../services/flags-countries/flags-countries.service';
@@ -23,6 +23,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   private _countryInput: any;
   private _countryCode$ = new BehaviorSubject(null);
   private _optionsIsReady$ = new BehaviorSubject(false);
+  private _setFormDisable$ = new BehaviorSubject(false);
   @Input() set countryInput(c: any) {
     if (c) {
       this._countryInput = c;
@@ -31,6 +32,9 @@ export class FlagsComponent implements OnInit, OnDestroy {
   }
   get countryInput(): any {
     return this._countryInput;
+  }
+  @Input() set isDisabled(isDisabled: boolean) {
+    this._setFormDisable$.next(isDisabled);
   }
   @Output() eventSelect = new EventEmitter<ICountry>();
 
@@ -46,6 +50,15 @@ export class FlagsComponent implements OnInit, OnDestroy {
     this.form = this._fb.group({
       alpha2Code: []
     });
+    this._setFormDisable$
+    .subscribe(v => {
+      if(v === true){
+        this.form.disable()
+      } else {
+        this.form.enable();
+      }
+    })
+
 
     combineLatest([
       this._countryCode$,
@@ -88,7 +101,8 @@ export class FlagsComponent implements OnInit, OnDestroy {
               icon: c.flag,
               callingCode: c.callingCodes[0],
               value: c.alpha2Code,
-              nativeName: c.nativeName
+              nativeName: c.nativeName,
+              numericCode: c.numericCode
             }
           ));
 
@@ -102,8 +116,8 @@ export class FlagsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
   }
-  get country(): AbstractControl {
-    return this.form.get('country');
+  get alpha2Code(): FormControl {
+    return this.form.get('alpha2Code') as FormControl;
   }
   resetFilter(e: MouseEvent, dd: Dropdown): void {
     dd.resetFilter();
@@ -120,7 +134,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   showCombo(): void {
     this.isComboOpen = true;
   }
-  isFindHasText(dd: Dropdown): boolean {
+  isFindInputHasText(dd: Dropdown): boolean {
     return !!dd._filterValue?.length;
   }
 }

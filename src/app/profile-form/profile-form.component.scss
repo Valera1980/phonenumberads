@@ -1,0 +1,11 @@
+.profile-form-container{
+    width: 445px;
+    &__control-wrapper{
+       display: flex;
+       flex-direction: column;
+       padding: 8px;
+    }
+    &__control {
+        width: 100%;
+    }
+}

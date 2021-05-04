@@ -1,7 +1,7 @@
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from './../../models/country';
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Input } from '@angular/core';
-import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Input, forwardRef } from '@angular/core';
+import { FormGroup, FormBuilder, AbstractControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import {
   parsePhoneNumberFromString,
   PhoneNumber,
@@ -14,14 +14,22 @@ import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
 import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
 import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
 import { MessageService } from 'primeng/api';
+import { IPhoneNumber } from '../../models/phone-model';
 
 @Component({
   selector: 'app-phone-input',
   templateUrl: './phone-input.component.html',
   styleUrls: ['./phone-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PhoneInputComponent),
+      multi: true
+    }
+  ],
 })
-export class PhoneInputComponent implements OnInit {
+export class PhoneInputComponent implements OnInit, ControlValueAccessor {
 
   @Input() setFocus = false;
   currentPhoneNumber: PhoneNumber;
@@ -34,14 +42,44 @@ export class PhoneInputComponent implements OnInit {
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
   selectedCountryName = '';
   selectedCountryNativeName = '';
-  stringIncrease = false;
+  selectedCountryNumericCode = null;
+  isDisabled = false;
+  currentData: IPhoneNumber;
   @ViewChild('phone_input', { static: true }) private _phoneInputControl: ElementRef;
   constructor(
     private _fb: FormBuilder,
-    private _users: UserService,
-    private _cd: ChangeDetectorRef,
+    // private _users: UserService,
+    // private _cd: ChangeDetectorRef,
     private _toast: MessageService
   ) { }
+  
+  onChange: any = () => { };
+  onTouch: any = () => { };
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouch = fn;
+  }
+
+  writeValue(obj: IPhoneNumber): void {
+    console.log(obj);
+    this.currentData = obj;
+    this.selectedCountryCode = obj.countryRegion as any;
+    this.pnumber.patchValue(obj.phoneNumberShort);
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+    if (isDisabled === true){
+      this.pnumber.disable();
+    }
+  }
+  setValue(data: Partial<IPhoneNumber>): void {
+    console.log(data);
+    this.onChange({...this.currentData, ...data});
+    this.onTouch({ ...this.currentData, ...data });
+  }
 
   ngOnInit(): void {
 
@@ -87,6 +125,8 @@ export class PhoneInputComponent implements OnInit {
 
         if (this.selectedCountryCode !== 'NO_COUNTRY') {
 
+          this.setValue({ phoneNumber: Number(inputNumber) });
+
           if (this.currentPhoneNumber) {
             console.log('>>>>>>>>>', this.currentPhoneNumber);
             this.phoneDealStrategy = new PhoneSelectedCountryStrategy(
@@ -105,11 +145,20 @@ export class PhoneInputComponent implements OnInit {
                 { emitEvent: false });
               // если поле вставили копипастом
               this.cursorPosition = this.getRawCursorPosition();
+
+              this.setValue({ 
+                phoneNumber: Number(this.currentPhoneNumber.number) ,
+                countryCode: this.currentPhoneNumber.countryCallingCode.toString()
+              });
+
             }
           }
         } else {
           this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
           this.isNumberValid = this.checkIsNubmerValid(inputNumber);
+
+          this.setValue({phoneNumber: Number(inputNumber)});
+          
         }
       });
 
@@ -144,9 +193,9 @@ export class PhoneInputComponent implements OnInit {
   get pnumber(): AbstractControl {
     return this.form.get('pnumber');
   }
-  private _queryUsers(): Observable<any> {
-    return this._users.queryGet();
-  }
+  // private _queryUsers(): Observable<any> {
+  //   return this._users.queryGet();
+  // }
   clearNumber(): void {
     this.form.reset();
   }
@@ -171,11 +220,20 @@ export class PhoneInputComponent implements OnInit {
     this.selectedCountryName = data.name;
     this.selectedCountryNativeName = data.nativeName;
     this.selectedCountryCallingCode = data.callingCodes[0];
+    this.selectedCountryNumericCode = data.numericCode;
     if (this.selectedCountryCode === data.alpha2Code) {
       return;
     }
     this.selectedCountryCode = data.alpha2Code;
     this.form.reset();
+
+    this.setValue({
+      phoneNumber: null,
+      countryCode: data.callingCodes[0],
+      countryRegion: data.alpha2Code,
+      countryId: Number(data.numericCode),
+      phoneNumberShort: '',
+    });
     // this.isNumberValid = this.checkIsNubmerValid(this.pnumber.value);
     // console.log(this.isNumberValid);
   }
@@ -192,7 +250,7 @@ export class PhoneInputComponent implements OnInit {
    * @param e Event
    * копирует номер в буфер обмена при нажатии на иконку "copy"
    */
-  copyNumber(e: any): void {
+  copyNumber(e: MouseEvent): void {
     // console.log(e);
     document.addEventListener('copy', (e: ClipboardEvent) => {
       e.clipboardData.setData('text/plain', (this.currentPhoneNumber ?
@@ -290,5 +348,8 @@ export class PhoneInputComponent implements OnInit {
   }
   getRawCursorPosition(): number {
     return this._phoneInputControl.nativeElement.selectionEnd;
+  }
+  remove(e:MouseEvent): void {
+
   }
 }
