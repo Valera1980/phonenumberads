@@ -1,0 +1,18 @@
+.selected-item-container {
+    width: 310px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+
+    &__icon {
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__image {
+        width: 30px;
+        height: 20px;
+        margin-right: 5px;
+    }
+}

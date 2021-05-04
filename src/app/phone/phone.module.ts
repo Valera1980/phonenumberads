@@ -9,12 +9,16 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
+import { SelectedCountryComponent } from './components/selected-country/selected-country.component';
+import { TemplateCountryComponent } from './components/template-country/template-country.component';
 
 
 @NgModule({
   declarations: [
     FlagsComponent,
-    PhoneInputComponent
+    PhoneInputComponent,
+    SelectedCountryComponent,
+    TemplateCountryComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +31,7 @@ import { ToastModule } from 'primeng/toast';
   ],
   exports: [
     FlagsComponent,
-    PhoneInputComponent
+    PhoneInputComponent,
   ],
   providers: [
     MessageService

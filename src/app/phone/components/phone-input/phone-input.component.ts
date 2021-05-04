@@ -1,18 +1,13 @@
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from './../../models/country';
-import { ChangeDetectionStrategy, Component, OnInit, EventEmitter, ChangeDetectorRef, ViewChildren, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import {
   parsePhoneNumberFromString,
   PhoneNumber,
-  CountryCode,
-  formatIncompletePhoneNumber,
-  isPossiblePhoneNumber,
-  parseNumber as parseNumberCustom,
-  getNumberType,
-  parse
+  CountryCode
 } from 'libphonenumber-js';
-import { filter, map, pairwise, startWith, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { Observable } from 'rxjs';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
@@ -28,6 +23,7 @@ import { MessageService } from 'primeng/api';
 })
 export class PhoneInputComponent implements OnInit {
 
+  @Input() setFocus = false;
   currentPhoneNumber: PhoneNumber;
   cursorPosition = 0;
   form: FormGroup;
@@ -49,7 +45,9 @@ export class PhoneInputComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._phoneInputControl.nativeElement.focus();
+    if(this.setFocus){
+      this._phoneInputControl.nativeElement.focus();
+    }
     this.form = this._fb.group({
       pnumber: ['']
     });

@@ -1,0 +1,14 @@
+<div class="selected-item-container" *ngIf="country">
+    <ng-container *ngIf="country?.alpha2Code === EnumPhoneStrategies.AUTODETECT">
+        <i class="selected-item-container__icon pi pi-compass" pTooltip="{{getTooltip()}}" tooltipPosition="right">
+        </i>
+    </ng-container>
+    <ng-container *ngIf="country?.alpha2Code === EnumPhoneStrategies.NO_COUNTRY">
+        <i class="selected-item-container__icon pi pi-globe" pTooltip="{{getTooltip()}}" tooltipPosition="right">
+        </i>
+    </ng-container>
+    <img *ngIf="country?.alpha2Code !== EnumPhoneStrategies.NO_COUNTRY 
+               && country?.alpha2Code !== EnumPhoneStrategies.AUTODETECT" 
+       class="selected-item-container__image"
+       src="{{country.flag}}" pTooltip="{{getTooltip()}}" tooltipPosition="right" />
+</div>

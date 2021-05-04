@@ -1,53 +1,52 @@
-
-.phone-input-wrapper{
-    position: absolute;
+.phone-input-wrapper {
+    // position: absolute;
+    position: relative;
     align-items: center;
     padding: 5px;
     margin-left: 10px;
     position: absolute;
-}
-.copy-icon{
-    margin-left: 5px;
-}
-.copy-icon-wrapper{
-    position: relative;
-    display: inline-block;
-    left: -40px;
-    :hover{
-        cursor: pointer;
+    &__controls {
+        display: flex;
     }
-}
-.clear-icon-wrapper{
-    position: relative;
-    left: -50px;
-    :hover{
-        cursor: pointer;
+    &__copy-icon {
+        position: absolute;
+        width: 100%;
+        left: 410px;
+        top: 15px;
+        :hover {
+            cursor: pointer;
+        }
     }
-}
-.controls {
-    display: flex;
-}
-.form-control{
-    height: 38px;
-    width: 300px;
-}
-
-.validation-error{
-    position: relative;
-    top: 5%;
-    color: red;
-    font-size: 12px;
-}
-.debug-info{
-    margin-top: 200px;
-}
-.country-code-block{
-    width: 50px;
-    height: 38px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    border: 1px solid #ced4da;
-    background-color: #c3c9ce;
+    &__clear-icon {
+        margin-left: 5px;
+        position: absolute;
+        left: 385px;
+        top: 15px;
+        :hover {
+            cursor: pointer;
+        }
+    }
+    &__validation-error {
+        position: absolute;
+        top: 12%;
+        color: red;
+        font-size: 12px;
+    }
+    &__country-code-block {
+        width: 50px;
+        height: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        border: 1px solid #ced4da;
+        background-color: #c3c9ce;
+    }
+    &__form-control {
+        height: 38px;
+        width: 300px;
+    }
+    &__debug-info {
+        margin-top: 200px;
+    }
 }

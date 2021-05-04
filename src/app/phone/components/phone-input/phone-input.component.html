@@ -1,16 +1,13 @@
 <p-toast position="bottom-right"></p-toast>
 
 <div class="phone-input-wrapper" [formGroup]="form">
-    <div class="controls">
+    <div class="phone-input-wrapper__controls">
         <div class="phone-input-wrapper__info"></div>
-        <div class="form-control-input-wrapper">
             <app-flags [countryInput]="selectedCountryCode" (eventSelect)="eventSelectCountry($event)"></app-flags>
-        </div>
-        <div class="country-code-block">
+        <div class="phone-input-wrapper__country-code-block">
              ({{selectedCountryCallingCode ? selectedCountryCallingCode : '...'}})
         </div>
-        <div class="form-control-input-wrapper">
-            <input class="form-control" 
+            <input class="phone-input-wrapper__form-control" 
                #phone_input
                maxlength="16"
                formControlName="pnumber" 
@@ -18,22 +15,19 @@
                placeholder="{{buildPlaceHolderPhoneInput()}}"
                [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
             />
-            <div class="copy-icon-wrapper">
-                <i  class="clear-icon pi pi-times" 
+                <i  class="pi pi-times phone-input-wrapper__clear-icon" 
                      *ngIf="pnumber.value?.length"
                     (click)="clearNumber()">
                 </i>
-                <i  class="pi pi-copy copy-icon" 
+                <i  class="pi pi-copy phone-input-wrapper__copy-icon" 
                     *ngIf="isNumberValid && pnumber.value?.length"
                     (click)="copyNumber($event)">
                 </i>
-            </div>
-            <div class="validation-error" *ngIf="isShowErrorNamberValidation()">
+            <div class="phone-input-wrapper__validation-error" *ngIf="isShowErrorNamberValidation()">
                 {{getErorMessage()}}
             </div>
-        </div>
     </div>
-    <div class="debug-info">
+    <div class="phone-input-wrapper__debug-info">
         <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
         <p>+380661234567</p>
         <p>+79123456789</p>
