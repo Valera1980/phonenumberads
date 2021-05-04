@@ -1,12 +1,10 @@
-import { CountryCode } from 'libphonenumber-js';
-import { ICountry, OwnCountryCode } from './../../models/country';
+import { ICountry } from './../../models/country';
 import { map, pluck, takeUntil, filter } from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { FlagsCountriesService } from '../../services/flags-countries/flags-countries.service';
-import { NullTemplateVisitor } from '@angular/compiler';
 import { Dropdown } from 'primeng/dropdown';
 
 @Component({
@@ -23,11 +21,9 @@ export class FlagsComponent implements OnInit, OnDestroy {
   selectedCountry: ICountry = null;
   isComboOpen = false;
   private _countryInput: any;
-  // TODO remove NullTemplateVisitor
-  private _countryCode$ = new BehaviorSubject(NullTemplateVisitor);
+  private _countryCode$ = new BehaviorSubject(null);
   private _optionsIsReady$ = new BehaviorSubject(false);
   @Input() set countryInput(c: any) {
-    // console.log(c);
     if (c) {
       this._countryInput = c;
       this._countryCode$.next(c);
@@ -41,8 +37,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   constructor(
     private _countryService: FlagsCountriesService,
     private _fb: FormBuilder,
-    private _cd: ChangeDetectorRef,
-    private _renderer: Renderer2
+    private _cd: ChangeDetectorRef
   ) { }
 
 
@@ -57,6 +52,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
       this._optionsIsReady$
     ])
       .pipe(
+        takeUntil(this.destroy$),
         filter((code, opt) => !!opt)
       )
       .subscribe(([code, opt]) => {
@@ -72,7 +68,6 @@ export class FlagsComponent implements OnInit, OnDestroy {
         pluck('alpha2Code'),
       )
       .subscribe(alpha2Code => {
-        // press button clear on combo
         if (alpha2Code === null) {
           this.form.patchValue({ alpha2Code: 'AUTODETECT' }, { emitEvent: false });
           this.selectedCountry = this.countries.find(c => c.alpha2Code === 'AUTODETECT');
@@ -89,7 +84,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
           this.countries = countries;
           return countries.map(c => (
             {
-              label: c.name,
+              label: c.name + c.nativeName,
               icon: c.flag,
               callingCode: c.callingCodes[0],
               value: c.alpha2Code,
@@ -110,33 +105,13 @@ export class FlagsComponent implements OnInit, OnDestroy {
   get country(): AbstractControl {
     return this.form.get('country');
   }
-  getSelectedTooltip(): string {
-    if (this.selectedCountry.alpha2Code === 'AUTODETECT') {
-      return 'автовыбор страны';
-    }
-    if (this.selectedCountry.alpha2Code === 'NO_COUNTRY') {
-      return 'без страны';
-    }
-    return `${this.selectedCountry.name} ( ${this.selectedCountry.nativeName} )`;
-  }
-  getTemplateTooltip(country: any): string {
-    if (country.value === 'AUTODETECT') {
-      return 'автовыбор страны';
-    }
-    if (country.value === 'NO_COUNTRY') {
-      return 'без страны';
-    }
-    return `${country.label} ( ${country.nativeName} )`;
-  }
-  resetFilter(e, dd: Dropdown): void {
+  resetFilter(e: MouseEvent, dd: Dropdown): void {
     dd.resetFilter();
-    // const findInput = this._renderer.selectRootElement('.p-dropdown-filter');
     const findInput = dd.filterViewChild.nativeElement;
-    if(findInput){
+    if (findInput) {
       findInput.click();
       findInput.focus();
     }
-    // this._cd.detectChanges();
     e.stopPropagation();
   }
   hideCombo(): void {
@@ -145,7 +120,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
   showCombo(): void {
     this.isComboOpen = true;
   }
-  isFindHasText(dd:Dropdown): boolean {
+  isFindHasText(dd: Dropdown): boolean {
     return !!dd._filterValue?.length;
   }
 }
