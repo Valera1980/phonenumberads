@@ -59,7 +59,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   constructor(
     private _fb: FormBuilder,
     // private _users: UserService,
-    // private _cd: ChangeDetectorRef,
+    private _cd: ChangeDetectorRef,
     private _toast: MessageService
   ) { }
 
@@ -77,8 +77,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     console.log(obj);
     this.currentData = obj;
     this.selectedCountryCode = obj.countryRegion as any;
-    this.pnumber.patchValue(obj.phoneNumberShort);
-    this.id.patchValue(obj.id);
+    setTimeout(() => {
+      this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
+      this._cd.detectChanges();
+    },50);
   }
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
@@ -98,7 +100,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       this._phoneInputControl.nativeElement.focus();
     }
     this.form = this._fb.group({
-      id: [null],
+      id: [0],
       pnumber: ['']
     });
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
@@ -139,7 +141,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
 
           this.setValue({
             phoneNumber: Number(inputNumber),
-            phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString()
+            phoneNumberShort: inputNumber
           });
 
           if (this.currentPhoneNumber) {
@@ -151,6 +153,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             this.isNumberValid = this.checkIsNubmerValid(this.currentPhoneNumber.number.toString());
             this.selectedCountryCode = this.currentPhoneNumber.country;
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
+
+            this.setValue({
+              phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
+              phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
+              countryCode: this.currentPhoneNumber.countryCallingCode.toString(),
+              countryRegion: this.selectedCountryCode,
+              countryId: this.selectedCountryNumericCode
+            });
+
             if (this.isNumberValid) {
               const numberFormatted = this.currentPhoneNumber.format('NATIONAL', { nationalPrefix: false })
                 .replace(/-/g, ' ')
@@ -164,7 +175,9 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
               this.setValue({
                 phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
                 phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
-                countryCode: this.currentPhoneNumber.countryCallingCode.toString()
+                countryCode: this.currentPhoneNumber.countryCallingCode.toString(),
+                countryRegion: this.selectedCountryCode,
+                countryId: this.selectedCountryNumericCode
               });
 
             }

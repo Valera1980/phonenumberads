@@ -49,7 +49,7 @@ export class FlagsCountriesService {
                 // код Казахстана указан в либе неверно
                 for (const currItem of countries) {
                   if (currItem.alpha2Code === 'KZ') {
-                    currItem.callingCodes = ['7'];
+                    currItem.callingCodes.splice(0, currItem.callingCodes.length).push('7');
                   }
                 }
                 const countriesWithDefaultValues = [noNumber, internationalNumber, ...countries];

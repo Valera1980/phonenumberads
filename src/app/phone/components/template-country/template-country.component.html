@@ -2,19 +2,19 @@
     <ng-container *ngIf="country?.value === EnumPhoneStrategies.AUTODETECT">
         <i class="template-item-container__icon pi pi-compass"></i>
         <span class="template-item-container__label">
-            {{getTooltip(country)}}
+            {{getLabel(country)}}
         </span>
     </ng-container>
     <ng-container *ngIf="country?.value === EnumPhoneStrategies.NO_COUNTRY">
         <i class="template-item-container__icon pi pi-globe"></i>
         <span class="template-item-container__label">
-            {{getTooltip(country)}}
+            {{getLabel(country)}}
         </span>
     </ng-container>
     <ng-container *ngIf="country.value !== EnumPhoneStrategies.AUTODETECT && country.value !== EnumPhoneStrategies.NO_COUNTRY">
         <img class="template-item-container__image" src="{{country.icon}}" />
         <span class="template-item-container__label">
-            {{getTooltip(country)}}
+            {{getLabel(country)}}
         </span>
     </ng-container>
 </div>

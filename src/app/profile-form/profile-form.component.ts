@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IPhoneNumber } from '../phone/models/phone-model';
 import { UserService } from '../phone/services/user/user.service';
+import { map } from 'rxjs/operators';
+import { unwrapPhones } from '../phone/utils/unwrap.phones';
 
 @Component({
   selector: 'app-profile-form',
@@ -24,20 +26,14 @@ export class ProfileFormComponent implements OnInit {
       name: [''],
       email: [''],
       phones: this._fb.array([])
-      // phone: [{
-      //   id: 1,
-      //   clientId: 15,
-      //   countryCode: '380',
-      //   countryId: 0,
-      //   countryRegion: 'UA',
-      //   isNew: false,
-      //   phoneNumber: 380664400345,
-      //   phoneNumberShort: '664400345',
-      //   profileId: 55565
-      // } as IPhoneNumber, ]
     });
 
     this.form.valueChanges
+      .pipe(
+        map(data => {
+          return {...data, ...{phones: unwrapPhones(data.phones)}}
+        })
+      )
       .subscribe(d => {
         console.log(d);
       });
@@ -86,5 +82,33 @@ export class ProfileFormComponent implements OnInit {
       this.phones.removeAt(0);
     }
     this.addPhonesControls(this.profile);
+  }
+  addPhone(): void {
+    const phones = this.profile.phones.map(p => p);
+    const newEmptyPhone: IPhoneNumber = {
+      id: new Date().getUTCMilliseconds(),
+      clientId: 15,
+      phoneNumber: null,
+      countryCode: null,
+      countryId: null,
+      countryRegion: null,
+      isNew: true,
+      phoneNumberShort: '',
+      profileId: this.profile.id
+    }
+    phones.push(newEmptyPhone);
+    this.profile = {
+      id: this.profile.id,
+      name: this.profile.name,
+      email: this.profile.email,
+      phones
+    };
+    this.phones.push(this._fb.group({
+      phoneNumber: newEmptyPhone
+    }))
+    // while (this.phones.length) {
+    //   this.phones.removeAt(0);
+    // }
+    // this.addPhonesControls(this.profile);
   }
 }

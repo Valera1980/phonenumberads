@@ -16,7 +16,7 @@ export class TemplateCountryComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  getTooltip(country: any): string {
+  getLabel(country: any): string {
     if (country.value === 'AUTODETECT') {
       return 'автовыбор страны';
     }

@@ -11,6 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { SelectedCountryComponent } from './components/selected-country/selected-country.component';
 import { TemplateCountryComponent } from './components/template-country/template-country.component';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -27,12 +28,14 @@ import { TemplateCountryComponent } from './components/template-country/template
     RadioButtonModule,
     InputTextModule,
     TooltipModule,
-    ToastModule
+    ToastModule,
+    ButtonModule
   ],
   exports: [
     FlagsComponent,
     PhoneInputComponent,
     InputTextModule,
+    ButtonModule
   ],
   providers: [
     MessageService
