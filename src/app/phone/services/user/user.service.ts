@@ -1,3 +1,4 @@
+import { IProfile } from './../../../models/profile.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -15,7 +16,7 @@ export class UserService {
     private _fireStore: AngularFirestore
   ) { }
 
-  queryGet(): Observable<any> {
+  queryGetFB(): Observable<any> {
     return this._fireStore.collection(this.collectionName).snapshotChanges()
       .pipe(
         catchError(e => {
@@ -26,11 +27,59 @@ export class UserService {
           if (Array.isArray(snaps)) {
             return snaps.map((snap: any) => {
               return snap.payload.doc.data();
-            })
+            });
           }
           return [];
         })
-      )
+      );
 
   }
+  queryGetMock(): Observable<IProfile> {
+    const profiles: IProfile = {
+      id: 1245,
+      name: 'Some profile name',
+      email: 'profile@gmail.com',
+      phones: [
+        {
+          id: 1,
+          isNew: false,
+          clientId: 15,
+          countryCode: '380',
+          countryId: 804,
+          countryRegion: 'UA',
+          phoneNumber: 380664400345,
+          phoneNumberShort: '664400345',
+          profileId: 1245
+
+        },
+        {
+          id: 2,
+          isNew: false,
+          clientId: 15,
+          countryCode: '7',
+          countryId: 398,
+          countryRegion: 'KZ',
+          phoneNumber: 77014486954,
+          phoneNumberShort: '7014486954',
+          profileId: 1245
+
+        },
+        {
+          id: 3,
+          isNew: false,
+          clientId: 15,
+          countryCode: '48',
+          countryId: 616,
+          countryRegion: 'PL',
+          phoneNumber: 48602644790,
+          phoneNumberShort: '602644790',
+          profileId: 1245
+
+        }
+      ]
+    };
+    return of(profiles);
+  }
 }
+// +48 602 644 790
+

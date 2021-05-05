@@ -4,7 +4,7 @@ export interface ICountry {
     readonly name: string;
     readonly nativeName: string;
     readonly alpha2Code: OwnCountryCode;
-    readonly callingCodes: string[];
+    callingCodes: string[];
     readonly flag: string;
     readonly numericCode: string;
 }

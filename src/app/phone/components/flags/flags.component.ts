@@ -1,7 +1,7 @@
 import { ICountry } from './../../models/country';
-import { map, pluck, takeUntil, filter } from 'rxjs/operators';
+import { map, pluck, takeUntil, filter, tap } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { FlagsCountriesService } from '../../services/flags-countries/flags-countries.service';
@@ -51,13 +51,13 @@ export class FlagsComponent implements OnInit, OnDestroy {
       alpha2Code: []
     });
     this._setFormDisable$
-    .subscribe(v => {
-      if(v === true){
-        this.form.disable()
-      } else {
-        this.form.enable();
-      }
-    })
+      .subscribe(v => {
+        if (v === true) {
+          this.form.disable();
+        } else {
+          this.form.enable();
+        }
+      });
 
 
     combineLatest([
@@ -66,13 +66,12 @@ export class FlagsComponent implements OnInit, OnDestroy {
     ])
       .pipe(
         takeUntil(this.destroy$),
-        filter((code, opt) => !!opt)
+        filter(([code, opt]) => opt === true)
       )
       .subscribe(([code, opt]) => {
-        console.log(code);
         this.form.patchValue({ alpha2Code: code });
         this._cd.markForCheck();
-      })
+      });
 
 
     this.form.valueChanges
@@ -89,7 +88,6 @@ export class FlagsComponent implements OnInit, OnDestroy {
           this.selectedCountry = this.countries.find(c => c.alpha2Code === alpha2Code);
           this.eventSelect.emit(this.selectedCountry);
         }
-
       });
     this._countryService.queryCountries()
       .pipe(
@@ -111,7 +109,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
       .subscribe(optionsCountries => {
         this.optionsCountries = optionsCountries;
         this._optionsIsReady$.next(true);
-      })
+      });
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -131,10 +129,28 @@ export class FlagsComponent implements OnInit, OnDestroy {
   hideCombo(): void {
     this.isComboOpen = false;
   }
-  showCombo(): void {
+  showCombo(dd: Dropdown): void {
     this.isComboOpen = true;
+    console.log(dd);
+    // const findInput = dd.filterViewChild.nativeElement;
+    // if (findInput) {
+    //   findInput.value = this.getFilterInputValue();
+    //   this._cd.markForCheck();
+    // }
   }
   isFindInputHasText(dd: Dropdown): boolean {
     return !!dd._filterValue?.length;
+  }
+  getFilterInputValue(): string {
+    if (!this.isComboOpen) {
+      return '';
+    }
+    if (!this.selectedCountry) {
+      return '';
+    }
+    if (this.selectedCountry.alpha2Code === 'AUTODETECT') {
+      return '';
+    }
+    return this.selectedCountry.name;
   }
 }

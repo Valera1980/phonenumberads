@@ -25,12 +25,13 @@
     }
       &__trash-icon {
          position: absolute;
-         top:4%;
+         top:16px;
          left: 450px;
     }
     &__validation-error {
         position: absolute;
-        top: 12%;
+        top: 44px;
+        left: 150px;
         color: red;
         font-size: 12px;
     }
@@ -49,6 +50,7 @@
         width: 300px;
     }
     &__debug-info {
-        margin-top: 200px;
+        margin-top: 20px;
+        font-size: 12px;
     }
 }

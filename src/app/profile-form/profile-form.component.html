@@ -15,9 +15,22 @@
          type="text" 
          pInputText>
     </div>
-       <app-phone-input formControlName="phone" [setFocus]="true">
-      </app-phone-input> 
-   
-
+      <div formArrayName="phones">
+          <div *ngFor="let currentPhone of phones.controls; let i = index" >
+              <div [formGroupName]="i">
+                  <app-phone-input 
+                     formControlName="phoneNumber" [setFocus]="false"
+                     (eventDelete)="eventDeletPhone($event, i)"
+                     >
+                 </app-phone-input> 
+              </div>
+            
+          </div>
+      </div>
 </div>
+
+<p>тестовые телефоны</p>
+<p>+380661234567</p>
+<p>+79123456789</p>
+<p>+77014486954</p>
 

@@ -2,6 +2,7 @@
 
 <div class="phone-input-wrapper" [formGroup]="form">
     <div class="phone-input-wrapper__controls">
+        <input formControlName="id" hidden >
         <div class="phone-input-wrapper__info">
             <app-flags 
                 [isDisabled]="isDisabled"
@@ -35,7 +36,7 @@
                 </div>
                
                 <div class="phone-input-wrapper__icon-wrapper">
-                  <i class="pi pi-trash phone-input-wrapper__trash-icon" (click)="remove($event)">
+                  <i class="pi pi-trash phone-input-wrapper__trash-icon" (click)="remove()">
                   </i>
                 </div>
                
@@ -45,8 +46,6 @@
     </div>
     <div class="phone-input-wrapper__debug-info">
         <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
-        <p>+380661234567</p>
-        <p>+79123456789</p>
     </div>
 
 </div>
