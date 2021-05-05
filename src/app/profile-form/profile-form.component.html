@@ -16,15 +16,20 @@
          pInputText>
     </div>
       <div formArrayName="phones">
-          <div *ngFor="let currentPhone of phones.controls; let i = index" >
-              <div [formGroupName]="i">
+          <div   *ngFor="let currentPhone of phones.controls; let i = index" >
+              <div  [formGroupName]="i" class="profile-form-container__phone-wrapper">
                   <app-phone-input 
                      formControlName="phoneNumber" [setFocus]="false"
                      (eventDelete)="eventDeletPhone($event, i)"
                      >
                  </app-phone-input> 
+                <div class="profile-form-container__radio-wrapper">
+                    <p-radioButton class="global-radio-icon" [(ngModel)]="isMain" [ngModelOptions]="{standalone: true}"
+                        [value]="currentPhone.value.phoneNumber.id">
+                    </p-radioButton>
+                </div>
               </div>
-            
+           
           </div>
           <div class="profile-form-container__add-phone-button-wrapper">
             <button pButton type="button" 
@@ -35,6 +40,11 @@
             </button>
           </div>
       </div>
+</div>
+<div>
+    <!-- <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="1" ></p-radioButton>
+    <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="2" ></p-radioButton>
+    <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="3" ></p-radioButton> -->
 </div>
 
 <p>тестовые телефоны</p>

@@ -1,4 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-.global-country-dropdown{
-    .p-dropdown-empty-message {width: 347px}
+.global-country-dropdown {
+    .p-dropdown-empty-message {
+        width: 347px;
+    }
+}
+.global-radio-icon {
+    .p-radiobutton-box {
+        background-color: brown;
+    }
 }

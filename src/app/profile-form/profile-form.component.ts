@@ -15,6 +15,7 @@ import { unwrapPhones } from '../phone/utils/unwrap.phones';
 export class ProfileFormComponent implements OnInit {
   form: FormGroup;
   profile: IProfile;
+  isMain: number;
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
@@ -106,9 +107,5 @@ export class ProfileFormComponent implements OnInit {
     this.phones.push(this._fb.group({
       phoneNumber: newEmptyPhone
     }))
-    // while (this.phones.length) {
-    //   this.phones.removeAt(0);
-    // }
-    // this.addPhonesControls(this.profile);
   }
 }

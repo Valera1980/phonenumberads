@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FlagsComponent } from './components/flags/flags.component';
 import { PhoneInputComponent } from './components/phone-input/phone-input.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
@@ -19,12 +19,13 @@ import { ButtonModule } from 'primeng/button';
     FlagsComponent,
     PhoneInputComponent,
     SelectedCountryComponent,
-    TemplateCountryComponent
+    TemplateCountryComponent,
   ],
   imports: [
     CommonModule,
     DropdownModule,
     ReactiveFormsModule,
+    FormsModule,
     RadioButtonModule,
     InputTextModule,
     TooltipModule,
@@ -35,7 +36,9 @@ import { ButtonModule } from 'primeng/button';
     FlagsComponent,
     PhoneInputComponent,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    RadioButtonModule,
+    FormsModule
   ],
   providers: [
     MessageService

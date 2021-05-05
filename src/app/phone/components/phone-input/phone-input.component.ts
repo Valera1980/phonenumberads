@@ -109,15 +109,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         filter((n: string) => !!n && n.length > 0),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
-          // console.log('current cursor ', cursorPosition);
-          // console.log(isOnlyAllowedSymbols(n, this.regexpPlusDigits));
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
           const replacedString = replaceNotNumber(n);
-
           this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
-
           this._phoneInputControl.nativeElement.setSelectionRange(cursorPosition, cursorPosition);
           return replacedString;
           // return n;
@@ -127,14 +123,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           if (this.phoneDealStrategy.needPutPlusInTheStart()) {
             this.putPlusAtStartOFNumber(n);
           }
-          // this.checkAndresetCountryCode(n);
         }),
       )
       .subscribe((inputNumber: string) => {
 
-        console.log(inputNumber);
-        // console.log(this._phoneInputControl);
-        // console.log(this.currentPhoneNumber);
         this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(inputNumber, this.selectedCountryCode);
 
         if (this.selectedCountryCode !== 'NO_COUNTRY') {
@@ -172,6 +164,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
               // если поле вставили копипастом
               this.cursorPosition = this.getRawCursorPosition();
 
+
               this.setValue({
                 phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
                 phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
@@ -179,6 +172,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
                 countryRegion: this.selectedCountryCode,
                 countryId: this.selectedCountryNumericCode
               });
+              this._cd.markForCheck();
 
             }
           }
@@ -187,6 +181,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           this.isNumberValid = this.checkIsNubmerValid(inputNumber);
 
           this.setValue({ phoneNumber: Number(inputNumber) });
+          this._cd.markForCheck();
 
         }
       });
@@ -245,9 +240,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * событие выбора из комбо стран
    */
   eventSelectCountry(data: ICountry): void {
-    // console.log('countryCode ', data.alpha2Code);
-    // console.log('this.selectedCountryCode', this.selectedCountryCode);
-    // console.log('countryName', data.name);
     this.phoneDealStrategy = this.buildStrategy(data.alpha2Code);
     this.selectedCountryName = data.name;
     this.selectedCountryNativeName = data.nativeName;
@@ -266,8 +258,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       countryId: Number(data.numericCode),
       phoneNumberShort: '',
     });
-    // this.isNumberValid = this.checkIsNubmerValid(this.pnumber.value);
-    // console.log(this.isNumberValid);
   }
   /**
    * We need check if the '+' is in very start of the string. If there isn't '+' then put it.

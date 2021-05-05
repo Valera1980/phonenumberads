@@ -29,6 +29,15 @@ export class FlagsCountriesService {
           console.log('----------------------------------');
           return this._http.get(this.url)
             .pipe(
+              map((countries: any[]) => {
+                // код Казахстана указан в либе неверно
+                for (const currItem of countries) {
+                  if (currItem.alpha2Code === 'KZ') {
+                    currItem.callingCodes = ['7'];
+                  }
+                }
+                return countries;
+              }),
               map((countries: ICountry[]) => {
                 const noNumber: ICountry = {
                   flag: 'https://icons-for-free.com/iconfiles/png/512/loupe+magnifying+glass+search+icon-1320196420501324296.png',
@@ -46,12 +55,7 @@ export class FlagsCountriesService {
                   nativeName: '',
                   numericCode: null
                 };
-                // код Казахстана указан в либе неверно
-                for (const currItem of countries) {
-                  if (currItem.alpha2Code === 'KZ') {
-                    currItem.callingCodes.splice(0, currItem.callingCodes.length).push('7');
-                  }
-                }
+                
                 const countriesWithDefaultValues = [noNumber, internationalNumber, ...countries];
                 this._countries$.next(countriesWithDefaultValues);
                 return countriesWithDefaultValues;

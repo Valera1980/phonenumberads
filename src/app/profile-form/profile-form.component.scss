@@ -1,14 +1,22 @@
-.profile-form-container{
+.profile-form-container {
     width: 445px;
-    &__control-wrapper{
-       display: flex;
-       flex-direction: column;
-       padding: 8px;
+    &__control-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
     }
     &__control {
         width: 100%;
     }
-    &__add-phone-button-wrapper{
-        
+    &__add-phone-button-wrapper {
+        margin-top: 25px;
+    }
+    &__phone-wrapper {
+        display: flex;
+        align-items: center;
+    }
+    &__radio-wrapper {
+        margin-left: 35px;
+        height: 38px;
     }
 }
