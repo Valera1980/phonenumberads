@@ -23,9 +23,12 @@
                      (eventDelete)="eventDeletPhone($event, i)"
                      >
                  </app-phone-input> 
-                <div class="profile-form-container__radio-wrapper">
-                    <p-radioButton class="global-radio-icon" [(ngModel)]="isMain" [ngModelOptions]="{standalone: true}"
-                        [value]="currentPhone.value.phoneNumber.id">
+                <div class="profile-form-container__radio-wrapper" >
+                    <p-radioButton class="global-radio-icon" 
+                      pTooltip="'Основной телефон'"
+                      [(ngModel)]="isMain" 
+                      [ngModelOptions]="{standalone: true}"
+                      [value]="currentPhone.value.phoneNumber.id">
                     </p-radioButton>
                 </div>
               </div>

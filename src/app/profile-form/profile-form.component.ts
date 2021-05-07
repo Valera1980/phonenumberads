@@ -1,7 +1,7 @@
+import { IPhoneNumber } from './../phone/models/phone-model';
 import { IProfile } from './../models/profile.model';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { IPhoneNumber } from '../phone/models/phone-model';
 import { UserService } from '../phone/services/user/user.service';
 import { map } from 'rxjs/operators';
 import { unwrapPhones } from '../phone/utils/unwrap.phones';
@@ -15,7 +15,7 @@ import { unwrapPhones } from '../phone/utils/unwrap.phones';
 export class ProfileFormComponent implements OnInit {
   form: FormGroup;
   profile: IProfile;
-  isMain: number;
+  isMain: number | string | null;
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
@@ -32,7 +32,7 @@ export class ProfileFormComponent implements OnInit {
     this.form.valueChanges
       .pipe(
         map(data => {
-          return {...data, ...{phones: unwrapPhones(data.phones)}}
+          return { ...data, ...{ phones: unwrapPhones(data.phones) } }
         })
       )
       .subscribe(d => {
@@ -43,6 +43,7 @@ export class ProfileFormComponent implements OnInit {
         // add user's phones to formArray
         this.profile = prof;
         this.addPhonesControls(prof);
+        this.isMain = this.getIsMain(this.profile.phones);
         this._cd.markForCheck();
       });
 
@@ -95,7 +96,8 @@ export class ProfileFormComponent implements OnInit {
       countryRegion: null,
       isNew: true,
       phoneNumberShort: '',
-      profileId: this.profile.id
+      profileId: this.profile.id,
+      isMain: false
     }
     phones.push(newEmptyPhone);
     this.profile = {
@@ -107,5 +109,14 @@ export class ProfileFormComponent implements OnInit {
     this.phones.push(this._fb.group({
       phoneNumber: newEmptyPhone
     }))
+  }
+  getIsMain(phones: IPhoneNumber[]): number | string | null {
+    if (phones.length === 0) {
+      return null;
+    }
+    if (phones.length === 1) {
+      return phones[0].id;
+    }
+    return phones.find(p => p.isMain === true)?.id;
   }
 }

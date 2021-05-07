@@ -49,7 +49,8 @@ export class UserService {
           countryRegion: 'UA',
           phoneNumber: 380664400345,
           phoneNumberShort: '664400345',
-          profileId: 1245
+          profileId: 1245,
+          isMain: false
 
         },
         {
@@ -61,7 +62,8 @@ export class UserService {
           countryRegion: 'KZ',
           phoneNumber: 77014486954,
           phoneNumberShort: '7014486954',
-          profileId: 1245
+          profileId: 1245,
+          isMain: true
 
         },
         {
@@ -73,7 +75,8 @@ export class UserService {
           countryRegion: 'PL',
           phoneNumber: 48602644790,
           phoneNumberShort: '602644790',
-          profileId: 1245
+          profileId: 1245,
+          isMain: false
 
         }
       ]

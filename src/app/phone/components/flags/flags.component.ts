@@ -89,8 +89,9 @@ export class FlagsComponent implements OnInit, OnDestroy {
           this.eventSelect.emit(this.selectedCountry);
         }
       });
-    this._countryService.queryCountries()
+    this._countryService.countries$
       .pipe(
+        filter(c => !!c),
         map(countries => {
           this.countries = countries;
           return countries.map(c => (

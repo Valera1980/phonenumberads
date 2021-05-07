@@ -4,8 +4,34 @@
         width: 347px;
     }
 }
-.global-radio-icon {
+.global-radio-icon .p-radiobutton {
+    width: 30px;
+    height: 30px;
     .p-radiobutton-box {
-        background-color: brown;
+        background: url("./assets/img/star_un.svg") center no-repeat;
+        width: 30px !important;
+        height: 30px;
+        background-size: cover;
+        border: none;
+        &.p-highlight {
+            border-color: none;
+            background: url("./assets/img/star_sel.svg") center no-repeat;
+            background-size: cover;
+            &:not(.p-disabled):hover {
+                border-color: none;
+                background: url("./assets/img/star_sel.svg") center no-repeat;
+                background-size: cover;
+            }
+            &:not(.p-disabled).p-focus {
+                border: none;
+                box-shadow: none;
+            }
+            .p-radiobutton-icon {
+                background: none;
+            }
+        }
+        .p-radiobutton-focused .p-radiobutton-focused {
+            border: none;
+        }
     }
 }
