@@ -328,7 +328,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       id: this.currentData.id,
       status: isValid,
       message: isValid ? '' : this.getErorMessage()
-    })
+    });
     return isValid;
   }
   isShowErrorNamberValidation(): boolean {
