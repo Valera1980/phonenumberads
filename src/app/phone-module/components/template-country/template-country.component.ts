@@ -1,5 +1,5 @@
 import { SelectItem } from 'primeng/api';
-import { EnumPhoneStrategies } from './../../models/strategies';
+import { EnumPhoneStrategies } from '../../models/strategies';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({

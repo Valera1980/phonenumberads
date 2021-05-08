@@ -1,17 +1,20 @@
-import { IPhoneNumber } from './../phone/models/phone-model';
+import { IErrorStatus, TErrorSeverity } from './../models/error.status.model';
+import { IPhoneNumber } from '../phone-module/models/phone-model';
 import { IProfile } from './../models/profile.model';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { UserService } from '../phone/services/user/user.service';
+import { UserService } from '../phone-module/services/user/user.service';
 import { map } from 'rxjs/operators';
-import { unwrapPhones } from '../phone/utils/unwrap.phones';
+import { unwrapPhones } from '../phone-module/utils/unwrap.phones';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-profile-form',
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // анимация применяется при добавлении нового телефона или удалении
   animations: [
     trigger('phoneAnim', [
       transition('void => *', [
@@ -34,10 +37,13 @@ export class ProfileFormComponent implements OnInit {
   profile: IProfile;
   isMain: number | string | null;
   currentAnimatedId;
+  phoneErrors: IErrorStatus[] = [];
+  phoneErrorsMsg = '';
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -77,7 +83,8 @@ export class ProfileFormComponent implements OnInit {
         phoneNumberShort: phone.phoneNumberShort,
         phoneNumber: phone.phoneNumber,
         profileId: phone.profileId,
-        clientId: phone.clientId
+        clientId: phone.clientId,
+        isMain: phone.isMain
       } as IPhoneNumber
     });
   }
@@ -92,7 +99,7 @@ export class ProfileFormComponent implements OnInit {
   eventDeletPhone(phoneId: number | string, index: number): void {
     this.currentAnimatedId = phoneId;
     setTimeout(() => {
-      
+
       const phones = this.profile.phones.filter(p => p.id !== phoneId);
       this.profile = {
         id: this.profile.id,
@@ -100,13 +107,13 @@ export class ProfileFormComponent implements OnInit {
         email: this.profile.email,
         phones
       };
-      
+
       //TODO remove after test
       // while (this.phones.length) {
-        this.phones.removeAt(index);
-        this.isMain = this.getIsMain(phones);
-        this._cd.markForCheck();
-      });
+      this.phones.removeAt(index);
+      this.isMain = this.getIsMain(phones);
+      this._cd.markForCheck();
+    });
     // }
     // this.addPhonesControls(this.profile);
   }
@@ -143,9 +150,50 @@ export class ProfileFormComponent implements OnInit {
     if (phones.length === 1) {
       return phones[0].id;
     }
-    if (!phones.find(p => p.isMain === true)){ // если нет ни одного главного -  ставим первый
-      return  phones[0].id;
+    if (!phones.find(p => p.isMain === true)) { // если нет ни одного главного -  ставим первый
+      return phones[0].id;
     }
     return phones.find(p => p.isMain === true)?.id;
+  }
+  eventValidationStatus(err: IErrorStatus): void {
+    this.phoneErrors = this.phoneErrors.filter(e => e.id !== err.id);
+    this.phoneErrors.push(err);
+  }
+  isPhoneErrors(): boolean {
+    return this.phoneErrors.length > 0 && this.phoneErrors.some(e => e.status === false);
+  }
+  selectIsMain(): void {
+    const phones = this.profile.phones
+      .map(p => p)
+      .map(p => ({ ...p, ...{ isMain: this.isMain === p.id } }));
+    this.profile = {
+      id: this.profile.id,
+      name: this.profile.name,
+      email: this.profile.email,
+      phones
+    };
+    console.log(this.profile.phones);
+  }
+  buildPhoneErrorsMessage(startWith = '***', delim = ';'): string {
+    if (this.phoneErrors.length > 0) {
+      return this.phoneErrors
+        .filter(err => err.status === false)
+        .reduce((acc: string, current: IErrorStatus) => {
+          return acc += current.message + delim;
+        }, startWith);
+    }
+    return '';
+  }
+  showToastMessage(msg: string, severity: TErrorSeverity): void {
+    this._messageService.add({ severity, detail: msg });
+  }
+  save(): void {
+    if (!this.isPhoneErrors()) {
+      this.phoneErrorsMsg = '';
+      this.showToastMessage('Телеф номера валидны', 'success');
+      return;
+    }
+    this.phoneErrorsMsg = this.buildPhoneErrorsMessage();
+    this.showToastMessage(this.phoneErrorsMsg, 'error');
   }
 }

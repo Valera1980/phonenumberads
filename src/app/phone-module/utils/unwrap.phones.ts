@@ -1,4 +1,4 @@
-import { IPhoneNumber } from './../models/phone-model';
+import { IPhoneNumber } from '../models/phone-model';
 export function unwrapPhones(phones: any[]): IPhoneNumber[] {
     if (Array.isArray(phones) && phones.length) {
         if (!!phones[0].phoneNumber) {

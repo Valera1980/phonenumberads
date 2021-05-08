@@ -1,4 +1,6 @@
-<p-toast position="bottom-right"></p-toast>
+<p-toast position="bottom-right">
+  
+</p-toast>
 
 <div class="phone-input-wrapper" [formGroup]="form">
     <div class="phone-input-wrapper__controls">
@@ -13,9 +15,9 @@
         <div class="phone-input-wrapper__country-code-block">
              ({{selectedCountryCallingCode ? selectedCountryCallingCode : '...'}})
         </div>
-            <input class="phone-input-wrapper__form-control" 
+        <input class="phone-input-wrapper__form-control" 
+               
                #phone_input
-               maxlength="16"
                formControlName="pnumber" 
                pInputText 
                placeholder="{{buildPlaceHolderPhoneInput()}}"

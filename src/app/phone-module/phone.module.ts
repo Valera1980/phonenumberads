@@ -38,7 +38,8 @@ import { ButtonModule } from 'primeng/button';
     InputTextModule,
     ButtonModule,
     RadioButtonModule,
-    FormsModule
+    FormsModule,
+    TooltipModule
   ],
   providers: [
     MessageService

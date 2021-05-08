@@ -3,6 +3,7 @@
         <label class="profile-form-container__control" for="name_input">Имя пользователя</label>
         <input class="profile-form-container__label" 
           formControlName="name"
+          placeholder="введите имя"
           #name_input 
           type="text" 
           pInputText>
@@ -12,11 +13,12 @@
         <input class="profile-form-container__label" 
         formControlName="email"
          #email_input 
+         placeholder="введите email"
          type="text" 
          pInputText>
     </div>
       <div formArrayName="phones" >
-          <div   *ngFor="let currentPhone of phones.controls; let i = index" @phoneAnim 
+          <div   *ngFor="let currentPhone of phones.controls; let i = index" @phoneAnim
                     [@.disabled]="currentPhone.value.phoneNumber.id !== currentAnimatedId">
               <div  [formGroupName]="i" 
                     class="profile-form-container__phone-wrapper"  
@@ -24,14 +26,16 @@
                   <app-phone-input
                      formControlName="phoneNumber" [setFocus]="false"
                      (eventDelete)="eventDeletPhone($event, i)"
+                     (eventValidationStatus)="eventValidationStatus($event)"
                      >
                  </app-phone-input> 
-                <div class="profile-form-container__radio-wrapper" >
+                <div class="profile-form-container__radio-wrapper" pTooltip="Основной телефон">
                     <p-radioButton class="global-radio-icon" 
-                      pTooltip="'Основной телефон'"
                       [(ngModel)]="isMain" 
                       [ngModelOptions]="{standalone: true}"
-                      [value]="currentPhone.value.phoneNumber.id">
+                      [value]="currentPhone.value.phoneNumber.id"
+                      (onClick)="selectIsMain()"
+                      >
                     </p-radioButton>
                 </div>
               </div>
@@ -46,15 +50,22 @@
             </button>
           </div>
       </div>
-</div>
-<div>
-    <!-- <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="1" ></p-radioButton>
-    <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="2" ></p-radioButton>
-    <p-radioButton [(ngModel)]="isMain" name="aaa" [inputId]="1" [value]="3" ></p-radioButton> -->
+    <button class="profile-form-container__btn-save" pButton type="button" label="Сохранить" (click)="save()">
+    </button>
 </div>
 
-<p>тестовые телефоны</p>
-<p>+380661234567</p>
-<p>+79123456789</p>
-<p>+77014486954</p>
+<div>
+</div>
+<div class="tests-phones">
+
+    <ul title="тестовые телефоны для копипаста">
+        <li>ua <div>+380661234567</div></li>
+        <li>ru <div>+380661234567</div></li>
+        <li>kz <div>+380661234567</div></li>
+        <li>ge <div>+995-(592)-04-00-24</div></li>
+        <li>be <div>+375-(29)-538-10-80</div></li>
+        <li>md <div>+373-76-007007</div></li>
+        <li>az <div>+994 50 854 89 00</div></li>
+    </ul>
+</div>
 

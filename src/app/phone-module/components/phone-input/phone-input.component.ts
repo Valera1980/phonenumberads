@@ -1,5 +1,6 @@
+import { IErrorStatus } from './../../../models/error.status.model';
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
-import { ICountry, OwnCountryCode } from './../../models/country';
+import { ICountry, OwnCountryCode } from '../../models/country';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +19,7 @@ import {
   PhoneNumber,
   CountryCode
 } from 'libphonenumber-js';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, pairwise, startWith, tap } from 'rxjs/operators';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
 import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
 import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
@@ -56,6 +57,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   currentData: IPhoneNumber;
   @ViewChild('phone_input', { static: true }) private _phoneInputControl: ElementRef;
   @Output() eventDelete = new EventEmitter();
+  @Output() eventValidationStatus = new EventEmitter<IErrorStatus>();
+  lastInput = '';
   constructor(
     private _fb: FormBuilder,
     // private _users: UserService,
@@ -80,7 +83,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     setTimeout(() => {
       this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
       this._cd.detectChanges();
-    },50);
+    }, 50);
   }
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
@@ -106,7 +109,26 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
     this.pnumber.valueChanges
       .pipe(
-        filter((n: string) => !!n && n.length > 0),
+        filter((n: string) => !!n && n.length > 0 ),
+        // этот блок  map(([prev, curr])
+        // нужен для ораничения длины ввода в поле не больше 16
+        // дело в том что поставить  maxLength в input нельзя, так как при копипасте
+        // номера типа +375-(29)-538-10-80 -  последние номера срежуться
+        // поэтому запоминается текущее , проверяется длина без символов в функции replaceNotNumber(curr).length
+        // и когда длина достигает предела, то патчится всегда последнее, которое удовлетворяло длине - this.lastInput
+        map((str) => {
+          if(replaceNotNumber(str).length === 16){
+            this.lastInput = str;
+            return this.lastInput;
+          }
+          if (replaceNotNumber(str).length > 16 ){
+            this.pnumber.patchValue(this.lastInput, {emitEvent: false});
+            return this.lastInput;
+          }
+          this.pnumber.patchValue(str, { emitEvent: false });
+          return str;
+        }),
+        filter(s => !!s),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
@@ -116,7 +138,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
           this._phoneInputControl.nativeElement.setSelectionRange(cursorPosition, cursorPosition);
           return replacedString;
-          // return n;
 
         }),
         tap((n: string) => {
@@ -142,7 +163,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
               this.form,
               this.currentPhoneNumber.country,
               this.selectedCountryName);
-            this.isNumberValid = this.checkIsNubmerValid(this.currentPhoneNumber.number.toString());
+            this.isNumberValid = this.checkNumberIsValidAndEmit(this.currentPhoneNumber.number.toString());
             this.selectedCountryCode = this.currentPhoneNumber.country;
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
 
@@ -178,7 +199,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           }
         } else {
           this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
-          this.isNumberValid = this.checkIsNubmerValid(inputNumber);
+          this.isNumberValid = this.checkNumberIsValidAndEmit(inputNumber);
 
           this.setValue({ phoneNumber: Number(inputNumber) });
           this._cd.markForCheck();
@@ -291,6 +312,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     // console.log(val);
     return val;
     // return this.phoneDealStrategy.validate(n);
+  }
+  checkNumberIsValidAndEmit(n: string): boolean {
+    const isValid = this.checkIsNubmerValid(n);
+    this.eventValidationStatus.emit({
+      id: this.currentData.id,
+      status: isValid,
+      message: isValid ? '' : this.getErorMessage()
+    })
+    return isValid;
   }
   isShowErrorNamberValidation(): boolean {
     // console.log('validation ', this.isNumberValid);

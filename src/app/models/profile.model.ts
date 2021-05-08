@@ -1,4 +1,4 @@
-import { IPhoneNumber } from './../phone/models/phone-model';
+import { IPhoneNumber } from '../phone-module/models/phone-model';
 export interface IProfile{
     readonly id: number;
     readonly name: string;

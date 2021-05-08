@@ -1,4 +1,4 @@
-import { ICountry } from './../../models/country';
+import { ICountry } from '../../models/country';
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { EnumPhoneStrategies } from '../../models/strategies';
 

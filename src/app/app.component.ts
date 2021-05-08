@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FlagsCountriesService } from './phone/services/flags-countries/flags-countries.service';
+import { FlagsCountriesService } from './phone-module/services/flags-countries/flags-countries.service';
 
 @Component({
   selector: 'app-root',
