@@ -1,21 +1,39 @@
 import { IPhoneNumber } from './../phone/models/phone-model';
 import { IProfile } from './../models/profile.model';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../phone/services/user/user.service';
 import { map } from 'rxjs/operators';
 import { unwrapPhones } from '../phone/utils/unwrap.phones';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-profile-form',
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('phoneAnim', [
+      transition('void => *', [
+        animate(1000, keyframes([
+          style({ opacity: 0, transform: 'translateY(-5px)', offset: 0 }),
+          style({ opacity: 0, transform: 'scale(1.3)', offset: 0 }),
+          style({ opacity: 0.8, transform: 'translateY(5px)', offset: 0.3 }),
+          style({ opacity: 1, transform: 'translateY(0)', offset: 0.8 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate('0.3s', style({ opacity: 0, transform: 'scale(.6)' }))
+      ])
+    ])
+  ]
 })
 export class ProfileFormComponent implements OnInit {
+  state = 'some';
   form: FormGroup;
   profile: IProfile;
   isMain: number | string | null;
+  currentAnimatedId;
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
@@ -72,18 +90,25 @@ export class ProfileFormComponent implements OnInit {
     }
   }
   eventDeletPhone(phoneId: number | string, index: number): void {
-    // this.phones.removeAt(index);
-    const phones = this.profile.phones.filter(p => p.id !== phoneId);
-    this.profile = {
-      id: this.profile.id,
-      name: this.profile.name,
-      email: this.profile.email,
-      phones
-    };
-    while (this.phones.length) {
-      this.phones.removeAt(0);
-    }
-    this.addPhonesControls(this.profile);
+    this.currentAnimatedId = phoneId;
+    setTimeout(() => {
+      
+      const phones = this.profile.phones.filter(p => p.id !== phoneId);
+      this.profile = {
+        id: this.profile.id,
+        name: this.profile.name,
+        email: this.profile.email,
+        phones
+      };
+      
+      //TODO remove after test
+      // while (this.phones.length) {
+        this.phones.removeAt(index);
+        this.isMain = this.getIsMain(phones);
+        this._cd.markForCheck();
+      });
+    // }
+    // this.addPhonesControls(this.profile);
   }
   addPhone(): void {
     const phones = this.profile.phones.map(p => p);
@@ -99,6 +124,7 @@ export class ProfileFormComponent implements OnInit {
       profileId: this.profile.id,
       isMain: false
     }
+    this.currentAnimatedId = newEmptyPhone.id;
     phones.push(newEmptyPhone);
     this.profile = {
       id: this.profile.id,
@@ -116,6 +142,9 @@ export class ProfileFormComponent implements OnInit {
     }
     if (phones.length === 1) {
       return phones[0].id;
+    }
+    if (!phones.find(p => p.isMain === true)){ // если нет ни одного главного -  ставим первый
+      return  phones[0].id;
     }
     return phones.find(p => p.isMain === true)?.id;
   }

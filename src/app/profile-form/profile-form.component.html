@@ -15,10 +15,13 @@
          type="text" 
          pInputText>
     </div>
-      <div formArrayName="phones">
-          <div   *ngFor="let currentPhone of phones.controls; let i = index" >
-              <div  [formGroupName]="i" class="profile-form-container__phone-wrapper">
-                  <app-phone-input 
+      <div formArrayName="phones" >
+          <div   *ngFor="let currentPhone of phones.controls; let i = index" @phoneAnim 
+                    [@.disabled]="currentPhone.value.phoneNumber.id !== currentAnimatedId">
+              <div  [formGroupName]="i" 
+                    class="profile-form-container__phone-wrapper"  
+                    >
+                  <app-phone-input
                      formControlName="phoneNumber" [setFocus]="false"
                      (eventDelete)="eventDeletPhone($event, i)"
                      >
