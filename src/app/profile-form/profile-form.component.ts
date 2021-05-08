@@ -38,7 +38,7 @@ export class ProfileFormComponent implements OnInit {
   form: FormGroup;
   profile: IProfile;
   isMain: number | string | null;
-  currentAnimatedId;
+  currentAnimatedId: string | number;
   phoneErrors: IErrorStatus[] = [];
   phoneErrorsMsg = '';
   constructor(
@@ -58,7 +58,7 @@ export class ProfileFormComponent implements OnInit {
     this.form.valueChanges
       .pipe(
         map(data => {
-          return { ...data, ...{ phones: unwrapPhones(data.phones) } }
+          return { ...data, ...{ phones: unwrapPhones(data.phones) } };
         })
       )
       .subscribe(d => {
@@ -67,7 +67,7 @@ export class ProfileFormComponent implements OnInit {
     this._userService.queryGetMock()
       .subscribe(prof => {
         // add user's phones to formArray
-        this.profile = prof
+        this.profile = prof;
         this.addPhonesControls(prof);
         this.isMain = this.getIsMain(this.profile.phones);
         this._cd.markForCheck();
@@ -132,7 +132,7 @@ export class ProfileFormComponent implements OnInit {
       phoneNumberShort: '',
       profileId: this.profile.id,
       isMain: false
-    }
+    };
     this.currentAnimatedId = newEmptyPhone.id;
     phones.push(newEmptyPhone);
     this.profile = {
@@ -143,7 +143,7 @@ export class ProfileFormComponent implements OnInit {
     };
     this.phones.push(this._fb.group({
       phoneNumber: newEmptyPhone
-    }))
+    }));
   }
   getIsMain(phones: IPhoneNumber[]): number | string | null {
     if (phones.length === 0) {

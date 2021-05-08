@@ -23,6 +23,8 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "semi":"warn",
+        "quotes": [2, "single"],
         "@angular-eslint/component-selector": [
           "error",
           {
