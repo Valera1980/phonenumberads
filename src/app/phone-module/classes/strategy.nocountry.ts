@@ -1,7 +1,6 @@
 import { FormGroup } from "@angular/forms";
 import { CountryCode } from "libphonenumber-js";
 import { TStrategiesPhone } from "../models/strategies";
-import { checkIsOnlyNumberOrPlusInInput } from "../utils/plusinthephone";
 import { IPhoneDeals } from "./strategy-phones.interface";
 
 export class PhoneNoCountryStrategy implements IPhoneDeals {

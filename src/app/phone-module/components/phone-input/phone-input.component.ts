@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { IErrorStatus } from './../../../models/error.status.model';
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from '../../models/country';
@@ -13,13 +20,13 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { FormGroup, FormBuilder, AbstractControl, NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import {
   parsePhoneNumberFromString,
   PhoneNumber,
   CountryCode
 } from 'libphonenumber-js';
-import { filter, map, pairwise, startWith, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
 import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
 import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
@@ -79,6 +86,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   writeValue(obj: IPhoneNumber): void {
     console.log(obj);
     this.currentData = obj;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.selectedCountryCode = obj.countryRegion as any;
     setTimeout(() => {
       this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
@@ -100,6 +108,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   ngOnInit(): void {
 
     if (this.setFocus) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       this._phoneInputControl.nativeElement.focus();
     }
     this.form = this._fb.group({
@@ -293,7 +302,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * @param e Event
    * копирует номер в буфер обмена при нажатии на иконку "copy"
    */
-  copyNumber(e: MouseEvent): void {
+  copyNumber(): void {
     // console.log(e);
     document.addEventListener('copy', (ev: ClipboardEvent) => {
       ev.clipboardData.setData('text/plain', (this.currentPhoneNumber ?

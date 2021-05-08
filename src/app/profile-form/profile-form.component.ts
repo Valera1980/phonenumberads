@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IErrorStatus, TErrorSeverity } from './../models/error.status.model';
 import { IPhoneNumber } from '../phone-module/models/phone-model';
 import { IProfile } from './../models/profile.model';
@@ -6,7 +8,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@
 import { UserService } from '../phone-module/services/user/user.service';
 import { map } from 'rxjs/operators';
 import { unwrapPhones } from '../phone-module/utils/unwrap.phones';
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -65,7 +67,7 @@ export class ProfileFormComponent implements OnInit {
     this._userService.queryGetMock()
       .subscribe(prof => {
         // add user's phones to formArray
-        this.profile = prof;
+        this.profile = prof
         this.addPhonesControls(prof);
         this.isMain = this.getIsMain(this.profile.phones);
         this._cd.markForCheck();

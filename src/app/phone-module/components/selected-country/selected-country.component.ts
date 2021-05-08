@@ -1,5 +1,5 @@
 import { ICountry } from '../../models/country';
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { EnumPhoneStrategies } from '../../models/strategies';
 
 @Component({
@@ -8,14 +8,11 @@ import { EnumPhoneStrategies } from '../../models/strategies';
   styleUrls: ['./selected-country.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectedCountryComponent implements OnInit {
+export class SelectedCountryComponent {
 
   @Input() country: ICountry;
   EnumPhoneStrategies = EnumPhoneStrategies;
-  constructor() { }
 
-  ngOnInit(): void {
-  }
   getTooltip(): string {
     if (this.country.alpha2Code === 'AUTODETECT') {
       return 'автовыбор страны';
