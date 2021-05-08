@@ -83,7 +83,14 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     setTimeout(() => {
       this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
       this._cd.detectChanges();
-    }, 50);
+    }, 50); 
+    if(obj.isNew){
+      this.eventValidationStatus.emit({
+        id: this.currentData.id,
+        status: false,
+        message: 'номер не валиден'
+      });
+    }
   }
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;

@@ -156,7 +156,8 @@ export class ProfileFormComponent implements OnInit {
     return phones.find(p => p.isMain === true)?.id;
   }
   eventValidationStatus(err: IErrorStatus): void {
-    this.phoneErrors = this.phoneErrors.filter(e => e.id !== err.id);
+    console.log(err);
+    this.phoneErrors = this.phoneErrors.filter(e => err.status === true ||  e.id !== err.id );
     this.phoneErrors.push(err);
   }
   isPhoneErrors(): boolean {
