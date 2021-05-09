@@ -6,8 +6,9 @@ import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@
 import { UserService } from '../phone-module/services/user/user.service';
 import { map } from 'rxjs/operators';
 import { unwrapPhones } from '../phone-module/utils/unwrap.phones';
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { MessageService } from 'primeng/api';
+import { IProfileForm } from '../models/profile-form-data.model';
 
 @Component({
   selector: 'app-profile-form',
@@ -36,7 +37,7 @@ export class ProfileFormComponent implements OnInit {
   form: FormGroup;
   profile: IProfile;
   isMain: number | string | null;
-  currentAnimatedId;
+  currentAnimatedId: string | number;
   phoneErrors: IErrorStatus[] = [];
   phoneErrorsMsg = '';
   constructor(
@@ -55,8 +56,8 @@ export class ProfileFormComponent implements OnInit {
 
     this.form.valueChanges
       .pipe(
-        map(data => {
-          return { ...data, ...{ phones: unwrapPhones(data.phones) } }
+        map((data: IProfileForm) => {
+          return { ...data, ...{ phones: unwrapPhones(data.phones) } };
         })
       )
       .subscribe(d => {
@@ -130,7 +131,7 @@ export class ProfileFormComponent implements OnInit {
       phoneNumberShort: '',
       profileId: this.profile.id,
       isMain: false
-    }
+    };
     this.currentAnimatedId = newEmptyPhone.id;
     phones.push(newEmptyPhone);
     this.profile = {
@@ -141,7 +142,7 @@ export class ProfileFormComponent implements OnInit {
     };
     this.phones.push(this._fb.group({
       phoneNumber: newEmptyPhone
-    }))
+    }));
   }
   getIsMain(phones: IPhoneNumber[]): number | string | null {
     if (phones.length === 0) {

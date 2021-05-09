@@ -1,6 +1,6 @@
 import { TStrategiesPhone } from '../models/strategies';
 import { FormGroup } from '@angular/forms';
-import { CountryCode } from "libphonenumber-js";
+import { CountryCode } from 'libphonenumber-js';
 
 export interface IPhoneDeals {
     strategy: TStrategiesPhone;

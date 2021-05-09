@@ -1,8 +1,7 @@
-import { FormGroup } from "@angular/forms";
-import { CountryCode } from "libphonenumber-js";
-import { TStrategiesPhone } from "../models/strategies";
-import { checkIsOnlyNumberOrPlusInInput } from "../utils/plusinthephone";
-import { IPhoneDeals } from "./strategy-phones.interface";
+import { FormGroup } from '@angular/forms';
+import { CountryCode } from 'libphonenumber-js';
+import { TStrategiesPhone } from '../models/strategies';
+import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneNoCountryStrategy implements IPhoneDeals {
     form: FormGroup;
@@ -12,10 +11,10 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
         this.form = form;
     }
     getValidationerrorMsg(): string {
-        return `номер не валиден`;
+        return 'номер не валиден';
     }
     getPlaceHolder(): string {
-        return 'введите любой номер'
+        return 'введите любой номер';
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;

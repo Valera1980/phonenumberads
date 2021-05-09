@@ -19,7 +19,7 @@ import { ButtonModule } from 'primeng/button';
     FlagsComponent,
     PhoneInputComponent,
     SelectedCountryComponent,
-    TemplateCountryComponent,
+    TemplateCountryComponent
   ],
   imports: [
     CommonModule,
