@@ -20,7 +20,13 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { FormGroup, FormBuilder, NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  FormControl
+} from '@angular/forms';
 import {
   parsePhoneNumberFromString,
   PhoneNumber,
@@ -29,7 +35,11 @@ import {
 import { filter, map, tap } from 'rxjs/operators';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
 import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
-import { isOnlyAllowedSymbols, isPlusPresent, replaceNotNumber } from '../../utils/plusinthephone';
+import {
+  isOnlyAllowedSymbols,
+  isPlusPresent,
+  replaceNotNumber
+} from '../../utils/plusinthephone';
 import { MessageService } from 'primeng/api';
 import { IPhoneNumber } from '../../models/phone-model';
 
@@ -47,13 +57,15 @@ import { IPhoneNumber } from '../../models/phone-model';
   ]
 })
 export class PhoneInputComponent implements OnInit, ControlValueAccessor {
-
   @Input() setFocus = false;
   currentPhoneNumber: PhoneNumber;
   cursorPosition = 0;
   form: FormGroup;
   isNumberValid = false;
-  phoneDealStrategy: PhoneNoCountryStrategy | PhoneSelectedCountryStrategy | AutodetectStrategy;
+  phoneDealStrategy:
+    | PhoneNoCountryStrategy
+    | PhoneSelectedCountryStrategy
+    | AutodetectStrategy;
   regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
   selectedCountryCallingCode = '';
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
@@ -62,7 +74,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   selectedCountryNumericCode = null;
   isDisabled = false;
   currentData: IPhoneNumber;
-  @ViewChild('phone_input', { static: true }) private _phoneInputControl: ElementRef;
+  @ViewChild('phone_input', { static: true })
+  private _phoneInputControl: ElementRef;
   @Output() eventDelete = new EventEmitter();
   @Output() eventValidationStatus = new EventEmitter<IErrorStatus>();
   lastInput = '';
@@ -71,10 +84,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     // private _users: UserService,
     private _cd: ChangeDetectorRef,
     private _toast: MessageService
-  ) { }
+  ) {}
 
-  onChange: any = () => { };
-  onTouch: any = () => { };
+  onChange: any = () => {};
+  onTouch: any = () => {};
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -106,7 +119,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit(): void {
-
     if (this.setFocus) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       this._phoneInputControl.nativeElement.focus();
@@ -118,7 +130,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
     this.pnumber.valueChanges
       .pipe(
-        filter((n: string) => !!n && n.length > 0 ),
+        filter((n: string) => !!n && n.length > 0),
         // этот блок  map(([prev, curr])
         // нужен для ораничения длины ввода в поле не больше 16
         // дело в том что поставить  maxLength в input нельзя, так как при копипасте
@@ -126,28 +138,33 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         // поэтому запоминается текущее , проверяется длина без символов в функции replaceNotNumber(curr).length
         // и когда длина достигает предела, то патчится всегда последнее, которое удовлетворяло длине - this.lastInput
         map((str) => {
-          if(replaceNotNumber(str).length === 16){
+          if (replaceNotNumber(str).length === 16) {
             this.lastInput = str;
             return this.lastInput;
           }
-          if (replaceNotNumber(str).length > 16 ){
-            this.pnumber.patchValue(this.lastInput, {emitEvent: false});
+          if (replaceNotNumber(str).length > 16) {
+            this.pnumber.patchValue(this.lastInput, { emitEvent: false });
             return this.lastInput;
           }
           this.pnumber.patchValue(str, { emitEvent: false });
           return str;
         }),
-        filter(s => !!s),
+        filter((s) => !!s),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
           const replacedString = replaceNotNumber(n);
-          this.form.patchValue({ pnumber: replacedString }, { emitEvent: false });
-          this._phoneInputControl.nativeElement.setSelectionRange(cursorPosition, cursorPosition);
+          this.form.patchValue(
+            { pnumber: replacedString },
+            { emitEvent: false }
+          );
+          this._phoneInputControl.nativeElement.setSelectionRange(
+            cursorPosition,
+            cursorPosition
+          );
           return replacedString;
-
         }),
         tap((n: string) => {
           if (this.phoneDealStrategy.needPutPlusInTheStart()) {
@@ -156,11 +173,12 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         })
       )
       .subscribe((inputNumber: string) => {
-
-        this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(inputNumber, this.selectedCountryCode);
+        this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(
+          inputNumber,
+          this.selectedCountryCode
+        );
 
         if (this.selectedCountryCode !== 'NO_COUNTRY') {
-
           this.setValue({
             phoneNumber: Number(inputNumber),
             phoneNumberShort: inputNumber
@@ -171,8 +189,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             this.phoneDealStrategy = new PhoneSelectedCountryStrategy(
               this.form,
               this.currentPhoneNumber.country,
-              this.selectedCountryName);
-            this.isNumberValid = this.checkNumberIsValidAndEmit(this.currentPhoneNumber.number.toString());
+              this.selectedCountryName
+            );
+            this.isNumberValid = this.checkNumberIsValidAndEmit(
+              this.currentPhoneNumber.number.toString()
+            );
             this.selectedCountryCode = this.currentPhoneNumber.country;
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
 
@@ -185,15 +206,20 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             });
 
             if (this.isNumberValid) {
-              const numberFormatted = this.currentPhoneNumber.format('NATIONAL', { nationalPrefix: false })
+              const numberFormatted = this.currentPhoneNumber
+                .format('NATIONAL', { nationalPrefix: false })
                 .replace(/-/g, ' ')
                 .replace('(', ' ')
                 .replace(')', ' ');
-              this.pnumber.patchValue(this.removeFirstZero(numberFormatted.trim(), this.selectedCountryCode),
-                { emitEvent: false });
+              this.pnumber.patchValue(
+                this.removeFirstZero(
+                  numberFormatted.trim(),
+                  this.selectedCountryCode
+                ),
+                { emitEvent: false }
+              );
               // если поле вставили копипастом
               this.cursorPosition = this.getRawCursorPosition();
-
 
               this.setValue({
                 phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
@@ -203,7 +229,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
                 countryId: this.selectedCountryNumericCode
               });
               this._cd.markForCheck();
-
             }
           }
         } else {
@@ -212,10 +237,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
 
           this.setValue({ phoneNumber: Number(inputNumber) });
           this._cd.markForCheck();
-
         }
       });
-
   }
   /**
    *
@@ -223,10 +246,14 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * @param 'selectedCountry'
    * @returns 'PhoneNumber | undefined
    */
-  parsePhoneNumberFromStringWrapper(inputNumber: string, selectedCountry: OwnCountryCode): PhoneNumber | undefined {
-    const countryCode: CountryCode = selectedCountry === 'AUTODETECT' || selectedCountry === 'NO_COUNTRY'
-      ? null
-      : selectedCountry;
+  parsePhoneNumberFromStringWrapper(
+    inputNumber: string,
+    selectedCountry: OwnCountryCode
+  ): PhoneNumber | undefined {
+    const countryCode: CountryCode =
+      selectedCountry === 'AUTODETECT' || selectedCountry === 'NO_COUNTRY'
+        ? null
+        : selectedCountry;
     return parsePhoneNumberFromString(inputNumber, countryCode);
   }
   /**
@@ -305,9 +332,12 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   copyNumber(): void {
     // console.log(e);
     document.addEventListener('copy', (ev: ClipboardEvent) => {
-      ev.clipboardData.setData('text/plain', (this.currentPhoneNumber ?
-        this.currentPhoneNumber.number :
-        this.pnumber.value));
+      ev.clipboardData.setData(
+        'text/plain',
+        this.currentPhoneNumber
+          ? this.currentPhoneNumber.number
+          : this.pnumber.value
+      );
       ev.preventDefault();
       document.removeEventListener('copy', null);
     });
@@ -342,7 +372,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * возвращает ошибки валидации
    */
   getErorMessage(): string {
-    return this.phoneDealStrategy.getValidationerrorMsg(this.selectedCountryName, this.selectedCountryNativeName);
+    return this.phoneDealStrategy.getValidationerrorMsg(
+      this.selectedCountryName,
+      this.selectedCountryNativeName
+    );
   }
   /**
    *
@@ -356,13 +389,19 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * то и различаются методы валидации, подтановки плюса в начало строки и т.д
    *
    */
-  buildStrategy(countryCode: OwnCountryCode): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
+  buildStrategy(
+    countryCode: OwnCountryCode
+  ): PhoneNoCountryStrategy | PhoneSelectedCountryStrategy {
     if (countryCode === 'AUTODETECT') {
       return new AutodetectStrategy(this.form);
     } else if (countryCode === 'NO_COUNTRY') {
       return new PhoneNoCountryStrategy(this.form);
     } else {
-      return new PhoneSelectedCountryStrategy(this.form, countryCode, this.selectedCountryName);
+      return new PhoneSelectedCountryStrategy(
+        this.form,
+        countryCode,
+        this.selectedCountryName
+      );
     }
   }
   /**
@@ -405,7 +444,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       return this.getRawCursorPosition() - spaces.length - 1;
     }
     return this.getRawCursorPosition() - spaces.length;
-
   }
   getRawCursorPosition(): number {
     return this._phoneInputControl.nativeElement.selectionEnd;
