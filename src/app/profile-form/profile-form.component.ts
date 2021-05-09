@@ -149,7 +149,7 @@ export class ProfileFormComponent implements OnInit {
       return null;
     }
     if (phones.length === 1) {
-      return phones[0].id
+      return phones[0].id;
     }
     if (!phones.find(p => p.isMain === true)) { // если нет ни одного главного -  ставим первый
       return phones[0].id;
