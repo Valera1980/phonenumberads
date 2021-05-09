@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import { IErrorStatus } from './../../../models/error.status.model';
 import { AutodetectStrategy } from '../../classes/strategy.autodetect';
 import { ICountry, OwnCountryCode } from '../../models/country';
@@ -71,11 +66,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
   selectedCountryName = '';
   selectedCountryNativeName = '';
-  selectedCountryNumericCode = null;
+  selectedCountryNumericCode: string = null;
   isDisabled = false;
   currentData: IPhoneNumber;
   @ViewChild('phone_input', { static: true })
-  private _phoneInputControl: ElementRef;
+  private _phoneInputControl: ElementRef<HTMLInputElement>;
   @Output() eventDelete = new EventEmitter();
   @Output() eventValidationStatus = new EventEmitter<IErrorStatus>();
   lastInput = '';
@@ -86,13 +81,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     private _toast: MessageService
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: any = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onTouch: any = () => {};
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: Partial<IPhoneNumber>): void {
     this.onChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: Partial<IPhoneNumber>): void {
     this.onTouch = fn;
   }
 
@@ -100,7 +97,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     console.log(obj);
     this.currentData = obj;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.selectedCountryCode = obj.countryRegion as any;
+    this.selectedCountryCode = obj.countryRegion as OwnCountryCode;
     setTimeout(() => {
       this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
       this._cd.detectChanges();
@@ -121,7 +118,9 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   }
   setValue(data: Partial<IPhoneNumber>): void {
     console.log(data);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.onChange({ ...this.currentData, ...data });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.onTouch({ ...this.currentData, ...data });
   }
 
