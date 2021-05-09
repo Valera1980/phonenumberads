@@ -15,7 +15,7 @@ import { IProfileForm } from '../models/profile-form-data.model';
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // анимация применяется при добавлении нового телефона или удалении
+  // анимация применяется при добавлении/удалении нового телефона 
   animations: [
     trigger('phoneAnim', [
       transition('void => *', [
