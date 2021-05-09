@@ -44,7 +44,7 @@ import { IPhoneNumber } from '../../models/phone-model';
       useExisting: forwardRef(() => PhoneInputComponent),
       multi: true
     }
-  ],
+  ]
 })
 export class PhoneInputComponent implements OnInit, ControlValueAccessor {
 
@@ -153,7 +153,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           if (this.phoneDealStrategy.needPutPlusInTheStart()) {
             this.putPlusAtStartOFNumber(n);
           }
-        }),
+        })
       )
       .subscribe((inputNumber: string) => {
 
@@ -286,7 +286,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       countryCode: data.callingCodes[0],
       countryRegion: data.alpha2Code,
       countryId: Number(data.numericCode),
-      phoneNumberShort: '',
+      phoneNumberShort: ''
     });
   }
   /**

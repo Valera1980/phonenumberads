@@ -81,7 +81,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
     this.form.valueChanges
       .pipe(
         takeUntil(this.destroy$),
-        pluck('alpha2Code'),
+        pluck('alpha2Code')
       )
       .subscribe(alpha2Code => {
         if (alpha2Code === null) {

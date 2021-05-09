@@ -24,6 +24,7 @@
       ],
       "rules": {
         "semi":"warn",
+        "comma-dangle": "warn",
         "quotes": [2, "single"],
         "@angular-eslint/component-selector": [
           "error",
