@@ -156,9 +156,10 @@ export class ProfileFormComponent implements OnInit {
     return phones.find(p => p.isMain === true)?.id;
   }
   eventValidationStatus(err: IErrorStatus): void {
-    console.log(err);
-    this.phoneErrors = this.phoneErrors.filter(e => err.status === true ||  e.id !== err.id );
-    this.phoneErrors.push(err);
+    this.phoneErrors = this.phoneErrors.filter(e => err.status !== true ||  e.id !== err.id );
+    if(err.status === false){
+      this.phoneErrors.push(err);
+    }
   }
   isPhoneErrors(): boolean {
     return this.phoneErrors.length > 0 && this.phoneErrors.some(e => e.status === false);
@@ -173,7 +174,7 @@ export class ProfileFormComponent implements OnInit {
       email: this.profile.email,
       phones
     };
-    console.log(this.profile.phones);
+    // console.log(this.profile.phones);
   }
   buildPhoneErrorsMessage(startWith = '***', delim = ';'): string {
     if (this.phoneErrors.length > 0) {
