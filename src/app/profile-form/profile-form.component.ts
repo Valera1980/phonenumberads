@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IErrorStatus, TErrorSeverity } from './../models/error.status.model';
 import { IPhoneNumber } from '../phone-module/models/phone-model';
 import { IProfile } from './../models/profile.model';
@@ -10,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { unwrapPhones } from '../phone-module/utils/unwrap.phones';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { MessageService } from 'primeng/api';
+import { IProfileForm } from '../models/profile-form-data.model';
 
 @Component({
   selector: 'app-profile-form',
@@ -57,7 +56,7 @@ export class ProfileFormComponent implements OnInit {
 
     this.form.valueChanges
       .pipe(
-        map(data => {
+        map((data: IProfileForm) => {
           return { ...data, ...{ phones: unwrapPhones(data.phones) } };
         })
       )
