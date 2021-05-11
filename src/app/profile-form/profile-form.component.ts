@@ -40,6 +40,7 @@ export class ProfileFormComponent implements OnInit {
   currentAnimatedId: string | number;
   phoneErrors: IErrorStatus[] = [];
   phoneErrorsMsg = '';
+  showTextErrorsInPhones = false;
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
@@ -109,15 +110,11 @@ export class ProfileFormComponent implements OnInit {
         phones
       };
 
-      //TODO remove after test
-      // while (this.phones.length) {
       this.phones.removeAt(index);
       this.isMain = this.getIsMain(phones);
       this.phoneErrors = this.phoneErrors.filter(e => e.id !== phoneId);
       this._cd.markForCheck();
     });
-    // }
-    // this.addPhonesControls(this.profile);
   }
   addPhone(): void {
     const phones = this.profile.phones.map(p => p);
@@ -158,8 +155,11 @@ export class ProfileFormComponent implements OnInit {
     return phones.find(p => p.isMain === true)?.id;
   }
   eventValidationStatus(err: IErrorStatus): void {
-    this.phoneErrors = this.phoneErrors.filter(e => err.status !== true ||  e.id !== err.id );
-    if(err.status === false){
+    const foundError = this.phoneErrors.find(e => e.id === err.id);
+    if (foundError) {
+      this.phoneErrors = this.phoneErrors.filter(e => e.id !== err.id);
+    }
+    if (err.status === false) {
       this.phoneErrors.push(err);
     }
   }
@@ -197,6 +197,7 @@ export class ProfileFormComponent implements OnInit {
       this.showToastMessage('Телеф номера валидны', 'success');
       return;
     }
+    this.showTextErrorsInPhones = true;
     this.phoneErrorsMsg = this.buildPhoneErrorsMessage();
     this.showToastMessage(this.phoneErrorsMsg, 'error');
   }

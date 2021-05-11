@@ -53,6 +53,7 @@ import { IPhoneNumber } from '../../models/phone-model';
 })
 export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   @Input() setFocus = false;
+  @Input() showTextErrors = false;
   currentPhoneNumber: PhoneNumber;
   cursorPosition = 0;
   form: FormGroup;
@@ -79,12 +80,12 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     // private _users: UserService,
     private _cd: ChangeDetectorRef,
     private _toast: MessageService
-  ) {}
+  ) { }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChange: any = () => {};
+  onChange: any = () => { };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onTouch: any = () => {};
+  onTouch: any = () => { };
 
   registerOnChange(fn: Partial<IPhoneNumber>): void {
     this.onChange = fn;
@@ -101,8 +102,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     setTimeout(() => {
       this.form.patchValue({ pnumber: obj.phoneNumberShort, id: obj.id });
       this._cd.detectChanges();
-    }, 50); 
-    if(obj.isNew){
+    }, 50);
+    if (obj.isNew) {
       this.eventValidationStatus.emit({
         id: this.currentData.id,
         status: false,
@@ -140,7 +141,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         // этот блок  map(([prev, curr])
         // нужен для ораничения длины ввода в поле не больше 16
         // дело в том что поставить  maxLength в input нельзя, так как при копипасте
-        // номера типа +375-(29)-538-10-80 -  последние номера срежуться
+        // номера типа +375-(29)-538-10-80 -  последние номера срежутся
         // поэтому запоминается текущее , проверяется длина без символов в функции replaceNotNumber(curr).length
         // и когда длина достигает предела, то патчится всегда последнее, которое удовлетворяло длине - this.lastInput
         map((str) => {
@@ -161,7 +162,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
             return n;
           }
-          const replacedString = replaceNotNumber(n);
+          // const replacedString = replaceNotNumber(n);
+          const replacedString = this.phoneDealStrategy.replaceNotAllowedSymbols(n);
           this.form.patchValue(
             { pnumber: replacedString },
             { emitEvent: false }
@@ -289,13 +291,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   clearNumber(): void {
     this.form.reset();
   }
-  // TODO или закончить с файрсторе или удалить
-  // eventQueryUsers(): void {
-  //   this._queryUsers()
-  //     .subscribe(u => {
-  //       console.log(u);
-  //     });
-  // }
   /**
    *
    * @param data ICountry
@@ -312,7 +307,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       return;
     }
     this.selectedCountryCode = data.alpha2Code;
-    this.form.reset();
+    // попытка спарсить то что есть в поле при переключении с "нет страны" на автовыбор
+
+    if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      const numberWithPlus = `+${this.pnumber.value}`;
+      this.pnumber.patchValue(numberWithPlus);
+    } else {
+      this.form.reset();
+    }
 
     this.setValue({
       phoneNumber: null,
@@ -351,12 +354,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this._toast.add({ severity: 'info', summary: 'Скопировано' });
   }
   checkIsNubmerValid(n: string): boolean {
-    // console.log(n);
-    // console.log(this.phoneDealStrategy.getStrategy());
     const val = this.phoneDealStrategy.validate(n);
-    // console.log(val);
     return val;
-    // return this.phoneDealStrategy.validate(n);
   }
   checkNumberIsValidAndEmit(n: string): boolean {
     const isValid = this.checkIsNubmerValid(n);
@@ -367,10 +366,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     });
     return isValid;
   }
-  isShowErrorNamberValidation(): boolean {
-    // console.log('validation ', this.isNumberValid);
-    // console.log('this.pnumber.touched ', this.pnumber.touched);
-    return (this.pnumber.dirty && !this.isNumberValid) || !this.isNumberValid;
+  isShowErrorNumberControlValidation(): boolean {
+    return ((this.pnumber.dirty && !this.isNumberValid) || !this.isNumberValid);
+  }
+  isShowErrorNumberMsgValidation(): boolean {
+    return this.showTextErrors && this.isShowErrorNumberControlValidation();
   }
   /**
    *

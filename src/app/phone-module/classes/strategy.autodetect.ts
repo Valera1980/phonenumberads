@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { CountryCode } from 'libphonenumber-js';
 import { TStrategiesPhone } from '../models/strategies';
-import { checkIsOnlyNumberOrPlusInInput } from '../utils/plusinthephone';
+import { checkIsOnlyNumberOrPlusInInput, replaceNotNumberExceptFirstPlus } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class AutodetectStrategy implements IPhoneDeals {
@@ -27,5 +27,7 @@ export class AutodetectStrategy implements IPhoneDeals {
     validate(s: string): boolean {
         return checkIsOnlyNumberOrPlusInInput(s) && s.length === this.allowedLength;
     }
-
+    replaceNotAllowedSymbols(s: string): string {
+        return replaceNotNumberExceptFirstPlus(s);
+    }
 }

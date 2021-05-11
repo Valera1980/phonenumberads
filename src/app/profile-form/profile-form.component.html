@@ -24,6 +24,7 @@
                     class="profile-form-container__phone-wrapper"  
                     >
                   <app-phone-input
+                     [showTextErrors]="showTextErrorsInPhones"
                      formControlName="phoneNumber" [setFocus]="false"
                      (eventDelete)="eventDeletPhone($event, i)"
                      (eventValidationStatus)="eventValidationStatus($event)"

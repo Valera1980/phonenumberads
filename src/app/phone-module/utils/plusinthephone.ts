@@ -11,9 +11,13 @@ export function isOnlyAllowedSymbols(s: string, r: RegExp): boolean {
 }
 
 export function replaceNotNumber(n: string): string {
+    const str = n.replace(/[^0-9]/g, '');
+    return str;
+}
+export function replaceNotNumberExceptFirstPlus(n: string): string {
     if (!n || n === '+') {
         return '+';
     }
-    const str = n.replace(/[^0-9+]/g, '');
+    const str = n.replace(/[^0-9]/g, '');
     return str;
 }

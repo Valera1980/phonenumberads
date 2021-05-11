@@ -1,6 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { CountryCode } from 'libphonenumber-js';
 import { TStrategiesPhone } from '../models/strategies';
+import { replaceNotNumber } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneNoCountryStrategy implements IPhoneDeals {
@@ -19,11 +20,13 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
     getStrategy(): TStrategiesPhone {
         return this.strategy;
     }
-      needPutPlusInTheStart(): boolean {
+    needPutPlusInTheStart(): boolean {
         return false;
     }
     validate(s: string): boolean {
         return s && s.length <= 15 && s.length >= 3;
     }
-
+    replaceNotAllowedSymbols(s: string): string {
+        return replaceNotNumber(s);
+    }
 }

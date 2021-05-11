@@ -1,6 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 import { TStrategiesPhone } from '../models/strategies';
+import { replaceNotNumberExceptFirstPlus } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneSelectedCountryStrategy implements IPhoneDeals {
@@ -31,5 +32,7 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     validate(n: string): boolean {
         return isValidPhoneNumber(n, this.countryCode);
     }
-
+    replaceNotAllowedSymbols(s: string): string {
+        return replaceNotNumberExceptFirstPlus(s);
+    }
 }

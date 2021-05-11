@@ -9,7 +9,7 @@
             </app-flags>
         </div>
         <div class="phone-input-wrapper__country-code-block">
-             +{{selectedCountryCallingCode ? selectedCountryCallingCode : '...'}}
+             {{selectedCountryCallingCode ? '+' + selectedCountryCallingCode : '...'}}
         </div>
         <input class="phone-input-wrapper__form-control" 
                
@@ -17,7 +17,7 @@
                formControlName="pnumber" 
                pInputText 
                placeholder="{{buildPlaceHolderPhoneInput()}}"
-               [ngClass]="{'ng-invalid ng-dirty': isShowErrorNamberValidation()}" 
+               [ngClass]="{'ng-invalid ng-dirty': isShowErrorNumberControlValidation()}" 
             />
                 <div class="phone-input-wrapper__icon-wrapper">
                     <i  class="pi pi-times phone-input-wrapper__clear-icon" 
@@ -38,7 +38,7 @@
                   </i>
                 </div>
                
-            <div class="phone-input-wrapper__validation-error" *ngIf="isShowErrorNamberValidation()">
+            <div class="phone-input-wrapper__validation-error" *ngIf="isShowErrorNumberMsgValidation()">
                 {{getErorMessage()}}
             </div>
     </div>
