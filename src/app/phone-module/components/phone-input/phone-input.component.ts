@@ -20,7 +20,8 @@ import {
   FormBuilder,
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
-  FormControl
+  FormControl,
+  Validators
 } from '@angular/forms';
 import {
   parsePhoneNumberFromString,
@@ -31,7 +32,6 @@ import { filter, map, tap } from 'rxjs/operators';
 import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
 import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
 import {
-  isOnlyAllowedSymbols,
   isPlusPresent,
   replaceNotNumber
 } from '../../utils/plusinthephone';
@@ -53,7 +53,17 @@ import { IPhoneNumber } from '../../models/phone-model';
 })
 export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   @Input() setFocus = false;
-  @Input() showTextErrors = false;
+  private _showTextErrors = false;
+  @Input() set showTextErrors(isShow: boolean) {
+    this._showTextErrors = isShow;
+    if(this.form){
+      this.pnumber.markAsDirty();
+      this.isNumberValid = this.checkNumberIsValidAndEmit(this.pnumber.value ?? '');
+    }
+  }
+  get showTextErrors(): boolean {
+    return this._showTextErrors;
+  }
   currentPhoneNumber: PhoneNumber;
   cursorPosition = 0;
   form: FormGroup;
@@ -62,7 +72,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     | PhoneNoCountryStrategy
     | PhoneSelectedCountryStrategy
     | AutodetectStrategy;
-  regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
+  // regexpPlusDigits = new RegExp(/^[+-]?\d+$/);
   selectedCountryCallingCode = '';
   selectedCountryCode: OwnCountryCode = 'AUTODETECT';
   selectedCountryName = '';
@@ -77,7 +87,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   lastInput = '';
   constructor(
     private _fb: FormBuilder,
-    // private _users: UserService,
     private _cd: ChangeDetectorRef,
     private _toast: MessageService
   ) { }
@@ -132,7 +141,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     }
     this.form = this._fb.group({
       id: [0],
-      pnumber: ['']
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      pnumber: ['', [Validators.required]]
     });
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
     this.pnumber.valueChanges
@@ -159,9 +169,12 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         filter((s) => !!s),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
-          if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
+          if (this.phoneDealStrategy.checkAllowedSymbols(n)) {
             return n;
           }
+          // if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
+          //   return n;
+          // }
           // const replacedString = replaceNotNumber(n);
           const replacedString = this.phoneDealStrategy.replaceNotAllowedSymbols(n);
           this.form.patchValue(
@@ -181,6 +194,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         })
       )
       .subscribe((inputNumber: string) => {
+        console.log('raw ', inputNumber);
         this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(
           inputNumber,
           this.selectedCountryCode
@@ -237,6 +251,14 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
                 countryId: this.selectedCountryNumericCode
               });
               this._cd.markForCheck();
+            } else {
+              this.pnumber.patchValue(
+                this.removeFirstZero(
+                  this.currentPhoneNumber.nationalNumber.trim(),
+                  this.selectedCountryCode
+                ),
+                { emitEvent: false }
+              );
             }
           }
         } else {
@@ -290,6 +312,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   // }
   clearNumber(): void {
     this.form.reset();
+    this.pnumber.markAsDirty();
+    this.isNumberValid =  this.checkNumberIsValidAndEmit('');
   }
   /**
    *
@@ -324,6 +348,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       countryId: Number(data.numericCode),
       phoneNumberShort: ''
     });
+
+    this.checkNumberIsValidAndEmit('');
   }
   /**
    * We need check if the '+' is in very start of the string. If there isn't '+' then put it.
@@ -367,10 +393,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     return isValid;
   }
   isShowErrorNumberControlValidation(): boolean {
-    return ((this.pnumber.dirty && !this.isNumberValid) || !this.isNumberValid);
+    return  !this.isNumberValid;
   }
   isShowErrorNumberMsgValidation(): boolean {
-    return this.showTextErrors && this.isShowErrorNumberControlValidation();
+    return this._showTextErrors && this.isShowErrorNumberControlValidation();
   }
   /**
    *

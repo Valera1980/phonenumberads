@@ -11,5 +11,6 @@ export interface IPhoneDeals {
     getStrategy(): TStrategiesPhone;
     getPlaceHolder(): string;
     getValidationerrorMsg(countryName?: string, countryNameNative?: string): string;
+    checkAllowedSymbols(s: string): boolean;
     replaceNotAllowedSymbols(s: string): string;
 }

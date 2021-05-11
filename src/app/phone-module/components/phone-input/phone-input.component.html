@@ -37,13 +37,13 @@
                   <i class="pi pi-trash phone-input-wrapper__trash-icon" (click)="remove()">
                   </i>
                 </div>
-               
+
             <div class="phone-input-wrapper__validation-error" *ngIf="isShowErrorNumberMsgValidation()">
                 {{getErorMessage()}}
             </div>
     </div>
     <div class="phone-input-wrapper__debug-info">
         <p>current strategy = {{phoneDealStrategy?.getStrategy()}}</p>
-    </div>
+        </div>
 
 </div>

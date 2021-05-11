@@ -35,4 +35,8 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     replaceNotAllowedSymbols(s: string): string {
         return replaceNotNumberExceptFirstPlus(s);
     }
+    checkAllowedSymbols(s: string): boolean {
+        const reg = new RegExp(/^[+-]?\d+$/);
+        return reg.test(s);
+    }
 }

@@ -29,4 +29,8 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
     replaceNotAllowedSymbols(s: string): string {
         return replaceNotNumber(s);
     }
+    checkAllowedSymbols(s: string): boolean {
+        const reg = new RegExp(/^\d$/);
+        return reg.test(s);
+    }
 }

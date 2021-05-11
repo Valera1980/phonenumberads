@@ -18,6 +18,6 @@ export function replaceNotNumberExceptFirstPlus(n: string): string {
     if (!n || n === '+') {
         return '+';
     }
-    const str = n.replace(/[^0-9]/g, '');
+    const str = n.replace(/[^0-9+]/g, '');
     return str;
 }
