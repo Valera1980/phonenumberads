@@ -3,7 +3,7 @@
     height: 20px;
     display: flex;
     align-items: center;
-    :hover{
+    :hover {
         transform: scale(1.1);
     }
 
@@ -17,6 +17,16 @@
         width: 30px;
         height: 20px;
         margin-right: 5px;
-        box-shadow: -2px -3px 5px rgba(0,0,0,0.5); 
+        box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.5);
+    }
+    &__tooltip-wrapper {
+        display: inline-block;
+        position: relative;
+        .p-tooltip .p-tooltip-text {
+            position: absolute;
+            width: max-content;
+            width: 900px;
+            height: 500px;
+        }
     }
 }

@@ -20,8 +20,6 @@ export class SelectedCountryComponent {
     if (this.country.alpha2Code === 'NO_COUNTRY') {
       return 'без страны';
     }
-    return `${this.country.name}
-    ( ${this.country.nativeName} )`;
+    return `${this.country.name} ( ${this.country.nativeName} )`;
   }
-
 }

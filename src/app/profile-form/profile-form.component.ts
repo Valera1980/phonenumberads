@@ -113,6 +113,7 @@ export class ProfileFormComponent implements OnInit {
       // while (this.phones.length) {
       this.phones.removeAt(index);
       this.isMain = this.getIsMain(phones);
+      this.phoneErrors = this.phoneErrors.filter(e => e.id !== phoneId);
       this._cd.markForCheck();
     });
     // }
@@ -163,7 +164,7 @@ export class ProfileFormComponent implements OnInit {
     }
   }
   isPhoneErrors(): boolean {
-    return this.phoneErrors.length > 0 && this.phoneErrors.some(e => e.status === false);
+    return this.phoneErrors.some(e => e.status === false);
   }
   selectIsMain(): void {
     const phones = this.profile.phones

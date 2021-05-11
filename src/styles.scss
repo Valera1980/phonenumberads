@@ -35,3 +35,9 @@
         }
     }
 }
+
+.global-tooltip {
+    .p-tooltip .p-tooltip-text {
+        width: max-content;
+    }
+}

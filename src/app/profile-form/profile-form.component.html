@@ -43,6 +43,7 @@
           </div>
           <div class="profile-form-container__add-phone-button-wrapper">
             <button pButton type="button" 
+                [disabled]="isPhoneErrors()"
                 icon="pi pi-plus-circle" 
                 label="Добавить номер"
                 (click)="addPhone()"
@@ -50,7 +51,12 @@
             </button>
           </div>
       </div>
-    <button class="profile-form-container__btn-save" pButton type="button" label="Сохранить" (click)="save()">
+    <button 
+      class="profile-form-container__btn-save" 
+      pButton 
+      type="button" 
+      label="Сохранить" 
+      (click)="save()">
     </button>
 </div>
 
