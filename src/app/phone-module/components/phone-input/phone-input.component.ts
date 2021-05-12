@@ -170,7 +170,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         filter((s) => !!s),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           if (this.phoneDealStrategy.checkAllowedSymbols(n)) {
             return n;
           }
@@ -178,7 +177,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           //   return n;
           // }
           // const replacedString = replaceNotNumber(n);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const replacedString = this.phoneDealStrategy.replaceNotAllowedSymbols(n);
           this.form.patchValue(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -189,7 +187,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             cursorPosition,
             cursorPosition
           );
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return replacedString;
         }),
         tap((n: string) => {
