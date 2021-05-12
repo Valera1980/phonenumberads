@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import { IErrorStatus } from './../../../models/error.status.model';
@@ -56,7 +57,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   private _showTextErrors = false;
   @Input() set showTextErrors(isShow: boolean) {
     this._showTextErrors = isShow;
-    if(this.form){
+    if (this.form) {
       this.pnumber.markAsDirty();
       this.isNumberValid = this.checkNumberIsValidAndEmit(this.pnumber.value ?? '');
     }
@@ -169,6 +170,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         filter((s) => !!s),
         map((n: string) => {
           const cursorPosition = this.calculateCursorPosition(n);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           if (this.phoneDealStrategy.checkAllowedSymbols(n)) {
             return n;
           }
@@ -176,8 +178,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           //   return n;
           // }
           // const replacedString = replaceNotNumber(n);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const replacedString = this.phoneDealStrategy.replaceNotAllowedSymbols(n);
           this.form.patchValue(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             { pnumber: replacedString },
             { emitEvent: false }
           );
@@ -185,6 +189,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             cursorPosition,
             cursorPosition
           );
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return replacedString;
         }),
         tap((n: string) => {
@@ -313,7 +318,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   clearNumber(): void {
     this.form.reset();
     this.pnumber.markAsDirty();
-    this.isNumberValid =  this.checkNumberIsValidAndEmit('');
+    this.isNumberValid = this.checkNumberIsValidAndEmit('');
   }
   /**
    *
@@ -393,7 +398,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     return isValid;
   }
   isShowErrorNumberControlValidation(): boolean {
-    return  !this.isNumberValid;
+    return !this.isNumberValid;
   }
   isShowErrorNumberMsgValidation(): boolean {
     return this._showTextErrors && this.isShowErrorNumberControlValidation();
