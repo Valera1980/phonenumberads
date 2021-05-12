@@ -173,13 +173,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           if (this.phoneDealStrategy.checkAllowedSymbols(n)) {
             return n;
           }
-          // if (isOnlyAllowedSymbols(n, this.regexpPlusDigits)) {
-          //   return n;
-          // }
-          // const replacedString = replaceNotNumber(n);
           const replacedString = this.phoneDealStrategy.replaceNotAllowedSymbols(n);
           this.form.patchValue(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             { pnumber: replacedString },
             { emitEvent: false }
           );
