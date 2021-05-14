@@ -363,7 +363,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    */
   copyNumber(): void {
     // console.log(e);
-    document.addEventListener('copy', (ev: ClipboardEvent) => {
+
+    const copyToClipBoard = (ev: ClipboardEvent) => {
       ev.clipboardData.setData(
         'text/plain',
         this.currentPhoneNumber
@@ -371,9 +372,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           : this.pnumber.value
       );
       ev.preventDefault();
-      document.removeEventListener('copy', null);
-    });
+    };
+
+    document.addEventListener('copy', copyToClipBoard);
     document.execCommand('copy');
+    document.removeEventListener('copy', copyToClipBoard );
     this._toast.add({ severity: 'info', summary: 'Скопировано' });
   }
   checkIsNubmerValid(n: string): boolean {
