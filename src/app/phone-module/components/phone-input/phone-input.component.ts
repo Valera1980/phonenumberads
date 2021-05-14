@@ -1,3 +1,4 @@
+import { PHONE_MAX_LENGTH } from 'src/app/models/constants';
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
@@ -143,7 +144,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this.form = this._fb.group({
       id: [0],
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      pnumber: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(16)]]
+      pnumber: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(PHONE_MAX_LENGTH)]]
     });
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
     this.pnumber.valueChanges
@@ -156,11 +157,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         // поэтому запоминается текущее , проверяется длина без символов в функции replaceNotNumber(curr).length
         // и когда длина достигает предела, то патчится всегда последнее, которое удовлетворяло длине - this.lastInput
         map((str) => {
-          if (replaceNotNumber(str).length === 16) {
+          if (replaceNotNumber(str).length === PHONE_MAX_LENGTH) {
             this.lastInput = str;
             return this.lastInput;
           }
-          if (replaceNotNumber(str).length > 16) {
+          if (replaceNotNumber(str).length > PHONE_MAX_LENGTH) {
             this.pnumber.patchValue(this.lastInput, { emitEvent: false });
             return this.lastInput;
           }
@@ -328,7 +329,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       return;
     }
     this.selectedCountryCode = data.alpha2Code;
-    // попытка спарсить то что есть в поле при переключении с "нет страны" на автовыбор
+    // попытка спарсить то что есть в поле при переключении с "нет страны" на "автовыбор"
 
     if (this.phoneDealStrategy.getStrategy() === 'AUTODETECT') {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

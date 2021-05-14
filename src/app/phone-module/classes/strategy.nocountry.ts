@@ -1,5 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { CountryCode } from 'libphonenumber-js';
+import { PHONE_MAX_LENGTH, PHONE_MIN_LENGTH } from 'src/app/models/constants';
 import { TStrategiesPhone } from '../models/strategies';
 import { replaceNotNumber } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
@@ -24,7 +25,7 @@ export class PhoneNoCountryStrategy implements IPhoneDeals {
         return false;
     }
     validate(s: string): boolean {
-        return s && s.length <= 15 && s.length >= 3;
+        return s && s.length <= PHONE_MAX_LENGTH - 1 && s.length >= PHONE_MIN_LENGTH;
     }
     replaceNotAllowedSymbols(s: string): string {
         return replaceNotNumber(s);
