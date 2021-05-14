@@ -18,13 +18,13 @@ export class TemplateCountryComponent {
   EnumPhoneStrategies = EnumPhoneStrategies;
 
  
-  getLabel(country: any): string {
+  getLabel(country: SelectItem): string {
     if (country.value === 'AUTODETECT') {
       return 'автовыбор страны';
     }
     if (country.value === 'NO_COUNTRY') {
       return 'без страны';
     }
-    return `${country.label} ( ${country.nativeName} )`;
+    return country.label;
   }
 }

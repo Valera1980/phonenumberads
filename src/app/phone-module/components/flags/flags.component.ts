@@ -103,7 +103,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
           this.countries = countries;
           return countries.map(c => (
             {
-              label: c.name + c.nativeName,
+              label: c.name + ' (' + c.nativeName + ')',
               icon: c.flag,
               callingCode: c.callingCodes[0],
               value: c.alpha2Code,
