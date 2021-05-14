@@ -143,7 +143,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this.form = this._fb.group({
       id: [0],
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      pnumber: ['', [Validators.required]]
+      pnumber: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(16)]]
     });
     this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
     this.pnumber.valueChanges
@@ -308,7 +308,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   //   return this._users.queryGet();
   // }
   clearNumber(): void {
-    this.form.reset();
+    this.pnumber.reset();
     this.pnumber.markAsDirty();
     this.isNumberValid = this.checkNumberIsValidAndEmit('');
   }
