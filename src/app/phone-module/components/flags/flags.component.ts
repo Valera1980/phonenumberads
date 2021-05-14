@@ -54,6 +54,9 @@ export class FlagsComponent implements OnInit, OnDestroy {
       alpha2Code: []
     });
     this._setFormDisable$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
       .subscribe(v => {
         if (v === true) {
           this.form.disable();
@@ -98,6 +101,7 @@ export class FlagsComponent implements OnInit, OnDestroy {
       });
     this._countryService.countries$
       .pipe(
+        takeUntil(this.destroy$),
         filter(c => !!c),
         map(countries => {
           this.countries = countries;
