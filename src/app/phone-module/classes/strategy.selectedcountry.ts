@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
+import { TStrategiesPhone } from '@phone-module/models/strategies';
+import { replaceNotNumberExceptFirstPlus } from '@phone-module/utils/plusinthephone';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
-import { TStrategiesPhone } from '../models/strategies';
-import { replaceNotNumberExceptFirstPlus } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneSelectedCountryStrategy implements IPhoneDeals {

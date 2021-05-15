@@ -1,10 +1,10 @@
-import { PHONE_MAX_LENGTH } from 'src/app/models/constants';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import { IErrorStatus } from './../../../models/error.status.model';
-import { AutodetectStrategy } from '../../classes/strategy.autodetect';
-import { ICountry, OwnCountryCode } from '../../models/country';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,14 +31,15 @@ import {
   CountryCode
 } from 'libphonenumber-js';
 import { filter, map, tap } from 'rxjs/operators';
-import { PhoneNoCountryStrategy } from '../../classes/strategy.nocountry';
-import { PhoneSelectedCountryStrategy } from '../../classes/strategy.selectedcountry';
-import {
-  isPlusPresent,
-  replaceNotNumber
-} from '../../utils/plusinthephone';
+
 import { MessageService } from 'primeng/api';
-import { IPhoneNumber } from '../../models/phone-model';
+import { PhoneSelectedCountryStrategy } from '@phone-module/classes/strategy.selectedcountry';
+import { PhoneNoCountryStrategy } from '@phone-module/classes/strategy.nocountry';
+import { IPhoneNumber } from '@phone-module/models/phone-model';
+import { PHONE_MAX_LENGTH } from '@phone-module/models/constants';
+import { ICountry, OwnCountryCode } from '@phone-module/models/country';
+import { isPlusPresent, replaceNotNumber } from '@phone-module/utils/plusinthephone';
+import { AutodetectStrategy } from '@phone-module/classes/strategy.autodetect';
 
 @Component({
   selector: 'app-phone-input',
@@ -381,7 +382,10 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this._toast.add({ severity: 'info', summary: 'Скопировано' });
   }
   checkIsNubmerValid(n: string): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const val = this.phoneDealStrategy.validate(n);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return val;
   }
   checkNumberIsValidAndEmit(n: string): boolean {
@@ -405,6 +409,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * возвращает ошибки валидации
    */
   getErorMessage(): string {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.phoneDealStrategy.getValidationerrorMsg(
       this.selectedCountryName,
       this.selectedCountryNativeName

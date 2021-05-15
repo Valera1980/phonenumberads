@@ -1,8 +1,8 @@
+import { PHONE_MAX_LENGTH } from '@phone-module/models/constants';
 import { FormGroup } from '@angular/forms';
+import { TStrategiesPhone } from '@phone-module/models/strategies';
+import { checkIsOnlyNumberOrPlusInInput, replaceNotNumberExceptFirstPlus } from '@phone-module/utils/plusinthephone';
 import { CountryCode } from 'libphonenumber-js';
-import { PHONE_MAX_LENGTH } from 'src/app/models/constants';
-import { TStrategiesPhone } from '../models/strategies';
-import { checkIsOnlyNumberOrPlusInInput, replaceNotNumberExceptFirstPlus } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class AutodetectStrategy implements IPhoneDeals {

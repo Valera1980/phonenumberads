@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SelectItem } from 'primeng/api';
-import { EnumPhoneStrategies } from '../../models/strategies';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { EnumPhoneStrategies } from '@phone-module/models/strategies';
 
 @Component({
   selector: 'app-template-country',

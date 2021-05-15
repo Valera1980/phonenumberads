@@ -1,8 +1,8 @@
 import { FormGroup } from '@angular/forms';
+import { PHONE_MAX_LENGTH, PHONE_MIN_LENGTH } from '@phone-module/models/constants';
+import { TStrategiesPhone } from '@phone-module/models/strategies';
+import { replaceNotNumber } from '@phone-module/utils/plusinthephone';
 import { CountryCode } from 'libphonenumber-js';
-import { PHONE_MAX_LENGTH, PHONE_MIN_LENGTH } from 'src/app/models/constants';
-import { TStrategiesPhone } from '../models/strategies';
-import { replaceNotNumber } from '../utils/plusinthephone';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneNoCountryStrategy implements IPhoneDeals {

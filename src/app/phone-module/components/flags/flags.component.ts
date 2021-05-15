@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { ICountry } from '../../models/country';
 import { map, pluck, takeUntil, filter } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { FlagsCountriesService } from '../../services/flags-countries/flags-countries.service';
 import { Dropdown } from 'primeng/dropdown';
+import { ICountry } from '@phone-module/models/country';
+import { FlagsCountriesService } from '@phone-module/services/flags-countries/flags-countries.service';
 
 @Component({
   selector: 'app-flags',
