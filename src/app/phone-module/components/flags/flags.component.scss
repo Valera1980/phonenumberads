@@ -62,4 +62,9 @@
             transform: scale(1.1);
         }
     }
+    &__spinner-wrapper {
+      position: absolute;
+      top: 13px;
+      left: 18px;
+    }
 }

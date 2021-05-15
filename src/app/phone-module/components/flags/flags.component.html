@@ -30,6 +30,11 @@
         </ng-template>
 
     </p-dropdown>
+    <div class="countries-container__spinner-wrapper" >
+        <p-progressSpinner *ngIf="!optionsCountries.length"  class="global-spinner" [strokeWidth]="7">
+        </p-progressSpinner>
+    </div>
+
         <div class="countries-container__icon-wrapper">
              <i *ngIf="isComboOpen && isFindInputHasText(drop_down)" 
                class="pi pi-times countries-container__reset-button" (click)="resetFilter($event, drop_down)">

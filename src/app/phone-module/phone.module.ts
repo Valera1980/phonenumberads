@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { SelectedCountryComponent } from './components/selected-country/selected-country.component';
 import { TemplateCountryComponent } from './components/template-country/template-country.component';
 import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ButtonModule } from 'primeng/button';
     InputTextModule,
     TooltipModule,
     ToastModule,
-    ButtonModule
+    ButtonModule,
+    ProgressSpinnerModule
   ],
   exports: [
     FlagsComponent,
