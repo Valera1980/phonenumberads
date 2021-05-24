@@ -55,33 +55,44 @@ export class UserService {
           phoneNumberShort: '664400345',
           profileId: 1245,
           isMain: false
-
         },
+        // {
+        //   id: 2,
+        //   isNew: false,
+        //   clientId: 15,
+        //   countryCode: '7',
+        //   countryId: 398,
+        //   countryRegion: 'KZ',
+        //   phoneNumber: 77014486954,
+        //   phoneNumberShort: '7014486954',
+        //   profileId: 1245,
+        //   isMain: true
+
+        // },
+        // {
+        //   id: 3,
+        //   isNew: false,
+        //   clientId: 15,
+        //   countryCode: '48',
+        //   countryId: 616,
+        //   countryRegion: 'PL',
+        //   phoneNumber: 48602644790,
+        //   phoneNumberShort: '602644790',
+        //   profileId: 1245,
+        //   isMain: false
+
+        // },
         {
-          id: 2,
+          id: 1,
           isNew: false,
           clientId: 15,
-          countryCode: '7',
-          countryId: 398,
-          countryRegion: 'KZ',
-          phoneNumber: 77014486954,
-          phoneNumberShort: '7014486954',
-          profileId: 1245,
-          isMain: true
-
-        },
-        {
-          id: 3,
-          isNew: false,
-          clientId: 15,
-          countryCode: '48',
-          countryId: 616,
-          countryRegion: 'PL',
-          phoneNumber: 48602644790,
-          phoneNumberShort: '602644790',
+          countryCode: null,
+          countryId: null,
+          countryRegion: null,
+          phoneNumber: 11111111,
+          phoneNumberShort: '11111111',
           profileId: 1245,
           isMain: false
-
         }
       ]
     };

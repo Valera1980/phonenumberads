@@ -135,7 +135,7 @@ export class ProfileFormComponent implements OnInit {
       phoneNumber: null,
       countryCode: null,
       countryId: null,
-      countryRegion: null,
+      countryRegion: 'AUTODETECT',
       isNew: true,
       phoneNumberShort: '',
       profileId: this.profile.id,

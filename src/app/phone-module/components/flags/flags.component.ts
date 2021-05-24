@@ -23,7 +23,8 @@ export class FlagsComponent implements OnInit, OnDestroy {
   selectedCountry: ICountry = null;
   isComboOpen = false;
   private _countryInput: unknown;
-  private _countryCode$ = new BehaviorSubject(null);
+  private _countryCode$ = new BehaviorSubject('NO_COUNTRY');
+  // private _countryCode$ = new Subject();
   private _optionsIsReady$ = new BehaviorSubject(false);
   private _setFormDisable$ = new BehaviorSubject(false);
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -87,12 +88,18 @@ export class FlagsComponent implements OnInit, OnDestroy {
         pluck('alpha2Code')
       )
       .subscribe(alpha2Code => {
-        if (alpha2Code === null) {
+        if (alpha2Code === 'NO_COUNTRY') {
+          this.form.patchValue({ alpha2Code: 'NO_COUNTRY' }, { emitEvent: false });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          this.selectedCountry = this.countries.find(c => c.alpha2Code === 'NO_COUNTRY');
+          this.eventSelect.emit(this.selectedCountry);
+        } else if(alpha2Code === 'AUTODETECT') {
           this.form.patchValue({ alpha2Code: 'AUTODETECT' }, { emitEvent: false });
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           this.selectedCountry = this.countries.find(c => c.alpha2Code === 'AUTODETECT');
           this.eventSelect.emit(this.selectedCountry);
-        } else {
+        }
+         else {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           this.selectedCountry = this.countries.find(c => c.alpha2Code === alpha2Code);
