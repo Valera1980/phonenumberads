@@ -6,7 +6,7 @@ export interface IPhoneNumber {
     readonly countryCode: string;
     readonly countryRegion: string;
     readonly phoneNumberShort: string;
-    readonly phoneNumber: number;
+    readonly phoneNumber: string;
     readonly profileId: number | string;
     readonly clientId: number | string;
 }

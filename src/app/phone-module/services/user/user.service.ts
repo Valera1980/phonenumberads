@@ -51,7 +51,7 @@ export class UserService {
           countryCode: '380',
           countryId: 804,
           countryRegion: 'UA',
-          phoneNumber: 380664400345,
+          phoneNumber: '380664400345',
           phoneNumberShort: '664400345',
           profileId: 1245,
           isMain: false
@@ -88,8 +88,8 @@ export class UserService {
           clientId: 15,
           countryCode: null,
           countryId: null,
-          countryRegion: null,
-          phoneNumber: 11111111,
+          countryRegion: 'NO_COUNTRY',
+          phoneNumber: '11111111',
           phoneNumberShort: '11111111',
           profileId: 1245,
           isMain: false

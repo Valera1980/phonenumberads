@@ -201,7 +201,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         );
         if (this.selectedCountryCode !== 'NO_COUNTRY') {
           this.setValue({
-            phoneNumber: Number(inputNumber),
+            phoneNumber: inputNumber,
             phoneNumberShort: inputNumber
           });
 
@@ -217,7 +217,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
 
             this.setValue({
-              phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
+              phoneNumber: this.currentPhoneNumber.nationalNumber.toString(),
               phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
               countryCode: this.currentPhoneNumber.countryCallingCode.toString(),
               countryRegion: this.selectedCountryCode,
@@ -243,7 +243,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
               this.cursorPosition = this.getRawCursorPosition();
 
               this.setValue({
-                phoneNumber: Number(this.currentPhoneNumber.number),
+                phoneNumber: this.currentPhoneNumber.number.toString(),
                 phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
                 countryCode: this.currentPhoneNumber.countryCallingCode.toString(),
                 countryRegion: this.selectedCountryCode,
@@ -266,7 +266,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           this.checkNumberIsValidAndEmit();
 
           this.setValue({
-            phoneNumber: Number(inputNumber),
+            phoneNumber: inputNumber.toString(),
             phoneNumberShort: inputNumber,
             countryCode: null,
             countryId: null,
@@ -341,7 +341,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       countryCode: data.callingCodes[0],
       countryRegion: data.alpha2Code,
       countryId: Number(data.numericCode),
-      phoneNumber: data.alpha2Code === 'NO_COUNTRY' ? Number(this.rawPhoneInput) : Number(this.currentPhoneNumber?.number),
+      phoneNumber: data.alpha2Code === 'NO_COUNTRY' ? this.rawPhoneInput.toString() :this.currentPhoneNumber?.number.toString(),
       phoneNumberShort: data.alpha2Code === 'NO_COUNTRY' ? this.rawPhoneInput : this.currentPhoneNumber?.nationalNumber.toString()
     });
 
