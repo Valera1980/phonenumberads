@@ -25,7 +25,7 @@
     "firebase": "^8.4.1",
     "libphonenumber-js": "^1.9.16",
     "primeicons": "^4.1.0",
-    "primeng": "^11.4.0",
+    "primeng": "^11.4.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"

@@ -1,7 +1,9 @@
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TStrategiesPhone } from '@phone-module/models/strategies';
+import { buildErrorsForPhoneInputs } from '@phone-module/utils/build-errors.util';
 import { replaceNotNumberExceptFirstPlus } from '@phone-module/utils/plusinthephone';
-import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+import { libphonenumberValidator } from '@phone-module/validators/libphonenumber-validator';
+import { CountryCode } from 'libphonenumber-js';
 import { IPhoneDeals } from './strategy-phones.interface';
 
 export class PhoneSelectedCountryStrategy implements IPhoneDeals {
@@ -13,15 +15,20 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
         this.form = form;
         this.countryCode = countryCode;
         this.countryName = countryName;
+        this.__setValidators();
     }
     getValidationerrorMsg(countryName?: string, countryNameNative?: string): string {
-        return `номер не валиден для ${countryName} (${countryNameNative})`;
+        if (this.validate()) {
+            return '';
+        }
+        const msg = buildErrorsForPhoneInputs(this.form.get('pnumber').errors);
+        if (msg === 'countryError') {
+            return 'phoneNumberIsWrongParams ' + ' (' +  countryName + ' '  + countryNameNative + ' )';
+        }
+        return buildErrorsForPhoneInputs(this.form.get('pnumber').errors);
     }
     getPlaceHolder(): string {
-        if(this.countryName.length > 20){
-            return 'введите номер для ' + this.countryName.substring(0, 20) + '...';
-        }
-        return 'введите номер для ' + this.countryName;
+        return 'phoneNumber';
     }
     getStrategy(): TStrategiesPhone {
         return this.strategy;
@@ -29,8 +36,8 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     needPutPlusInTheStart(): boolean {
         return false;
     }
-    validate(n: string): boolean {
-        return isValidPhoneNumber(n, this.countryCode);
+    validate(): boolean {
+        return this.form.get('pnumber').valid;
     }
     replaceNotAllowedSymbols(s: string): string {
         return replaceNotNumberExceptFirstPlus(s);
@@ -38,5 +45,18 @@ export class PhoneSelectedCountryStrategy implements IPhoneDeals {
     checkAllowedSymbols(s: string): boolean {
         const reg = new RegExp(/^[+-]?\d+$/);
         return reg.test(s);
+    }
+    __setValidators(): void {
+        const phoneControl = this.form.get('pnumber');
+        phoneControl.clearValidators();
+        phoneControl.setValidators([
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            Validators.required,
+            libphonenumberValidator(this.countryCode)]
+        );
+        phoneControl.updateValueAndValidity({ emitEvent: false });
+    }
+    __getPhoneControl(): FormControl {
+        return this.form.get('pnumber') as FormControl;
     }
 }

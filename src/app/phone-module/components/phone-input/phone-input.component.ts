@@ -61,7 +61,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this._showTextErrors = isShow;
     if (this.form) {
       this.pnumber.markAsDirty();
-      this.isNumberValid = this.checkNumberIsValidAndEmit(this.pnumber.value ?? '');
+      this.checkNumberIsValidAndEmit();
     }
   }
   get showTextErrors(): boolean {
@@ -70,7 +70,6 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   currentPhoneNumber: PhoneNumber;
   cursorPosition = 0;
   form: FormGroup;
-  isNumberValid = false;
   phoneDealStrategy:
     | PhoneNoCountryStrategy
     | PhoneSelectedCountryStrategy
@@ -87,6 +86,8 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   private _phoneInputControl: ElementRef<HTMLInputElement>;
   @Output() eventDelete = new EventEmitter();
   @Output() eventValidationStatus = new EventEmitter<IErrorStatus>();
+  rawPhoneInput = '';
+
   lastInput = '';
   constructor(
     private _fb: FormBuilder,
@@ -193,28 +194,25 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
         })
       )
       .subscribe((inputNumber: string) => {
-        console.log('raw ', inputNumber);
+        this.rawPhoneInput = inputNumber;
         this.currentPhoneNumber = this.parsePhoneNumberFromStringWrapper(
           inputNumber,
           this.selectedCountryCode
         );
-
         if (this.selectedCountryCode !== 'NO_COUNTRY') {
           this.setValue({
             phoneNumber: Number(inputNumber),
             phoneNumberShort: inputNumber
           });
 
-          if (this.currentPhoneNumber) {
-            console.log('>>>>>>>>>', this.currentPhoneNumber);
+          if (this.currentPhoneNumber && this.currentPhoneNumber.country) {
             this.phoneDealStrategy = new PhoneSelectedCountryStrategy(
               this.form,
               this.currentPhoneNumber.country,
               this.selectedCountryName
             );
-            this.isNumberValid = this.checkNumberIsValidAndEmit(
-              this.currentPhoneNumber.number.toString()
-            );
+            const isNumberValid = this.phoneDealStrategy.validate();
+            this.checkNumberIsValidAndEmit();
             this.selectedCountryCode = this.currentPhoneNumber.country;
             this.selectedCountryCallingCode = this.currentPhoneNumber.countryCallingCode.toString();
 
@@ -226,33 +224,36 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
               countryId: this.selectedCountryNumericCode
             });
 
-            if (this.isNumberValid) {
+            if (isNumberValid) {
               const numberFormatted = this.currentPhoneNumber
                 .format('NATIONAL', { nationalPrefix: false })
                 .replace(/-/g, ' ')
                 .replace('(', ' ')
                 .replace(')', ' ');
               this.pnumber.patchValue(
-                this.removeFirstZero(
+                this.removeExtraSymbols(
                   numberFormatted.trim(),
                   this.selectedCountryCode
                 ),
                 { emitEvent: false }
               );
+              this.checkNumberIsValidAndEmit();
+
               // если поле вставили копипастом
               this.cursorPosition = this.getRawCursorPosition();
 
               this.setValue({
-                phoneNumber: Number(this.currentPhoneNumber.nationalNumber),
+                phoneNumber: Number(this.currentPhoneNumber.number),
                 phoneNumberShort: this.currentPhoneNumber.nationalNumber.toString(),
                 countryCode: this.currentPhoneNumber.countryCallingCode.toString(),
                 countryRegion: this.selectedCountryCode,
                 countryId: this.selectedCountryNumericCode
               });
+
               this._cd.markForCheck();
             } else {
               this.pnumber.patchValue(
-                this.removeFirstZero(
+                this.removeExtraSymbols(
                   this.currentPhoneNumber.nationalNumber.trim(),
                   this.selectedCountryCode
                 ),
@@ -262,9 +263,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
           }
         } else {
           this.phoneDealStrategy = new PhoneNoCountryStrategy(this.form);
-          this.isNumberValid = this.checkNumberIsValidAndEmit(inputNumber);
+          this.checkNumberIsValidAndEmit();
 
-          this.setValue({ phoneNumber: Number(inputNumber) });
+          this.setValue({
+            phoneNumber: Number(inputNumber),
+            phoneNumberShort: inputNumber,
+            countryCode: null,
+            countryId: null,
+            countryRegion: null
+          });
           this._cd.markForCheck();
         }
       });
@@ -294,9 +301,12 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
    * функция "this.currentPhoneNumber.format('NATIONAL'" почему-то возвращает 0 впереди для Украины
    * хотя не должна. Получается например код 380 и номер 066 11 22 555.
    */
-  removeFirstZero(s: string, countryCode: CountryCode): string {
+  removeExtraSymbols(s: string, countryCode: CountryCode): string {
     if (countryCode === 'UA' && s.startsWith('0')) {
       return s.replace('0', '');
+    }
+    if (countryCode === 'BY' && s.startsWith('8')) {
+      return s.replace('8', '');
     }
     return s;
   }
@@ -312,7 +322,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
   clearNumber(): void {
     this.pnumber.reset();
     this.pnumber.markAsDirty();
-    this.isNumberValid = this.checkNumberIsValidAndEmit('');
+    this.checkNumberIsValidAndEmit();
   }
   /**
    *
@@ -326,6 +336,15 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     this.selectedCountryNativeName = data.nativeName;
     this.selectedCountryCallingCode = data.callingCodes[0];
     this.selectedCountryNumericCode = data.numericCode;
+
+    this.setValue({
+      countryCode: data.callingCodes[0],
+      countryRegion: data.alpha2Code,
+      countryId: Number(data.numericCode),
+      phoneNumber: data.alpha2Code === 'NO_COUNTRY' ? Number(this.rawPhoneInput) : Number(this.currentPhoneNumber?.number),
+      phoneNumberShort: data.alpha2Code === 'NO_COUNTRY' ? this.rawPhoneInput : this.currentPhoneNumber?.nationalNumber.toString()
+    });
+
     if (this.selectedCountryCode === data.alpha2Code) {
       return;
     }
@@ -340,15 +359,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
       this.form.reset();
     }
 
-    this.setValue({
-      phoneNumber: null,
-      countryCode: data.callingCodes[0],
-      countryRegion: data.alpha2Code,
-      countryId: Number(data.numericCode),
-      phoneNumberShort: ''
-    });
-
-    this.checkNumberIsValidAndEmit('');
+    this.checkNumberIsValidAndEmit();
   }
   /**
    * We need check if the '+' is in very start of the string. If there isn't '+' then put it.
@@ -381,15 +392,14 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     document.removeEventListener('copy', copyToClipBoard );
     this._toast.add({ severity: 'info', summary: 'Скопировано' });
   }
-  checkIsNubmerValid(n: string): boolean {
+  checkIsNubmerValid(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const val = this.phoneDealStrategy.validate(n);
+    return this.phoneDealStrategy.validate();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return val;
   }
-  checkNumberIsValidAndEmit(n: string): boolean {
-    const isValid = this.checkIsNubmerValid(n);
+  checkNumberIsValidAndEmit(): boolean {
+    const isValid = this.checkIsNubmerValid();
     this.eventValidationStatus.emit({
       id: this.currentData.id,
       status: isValid,
@@ -398,7 +408,7 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor {
     return isValid;
   }
   isShowErrorNumberControlValidation(): boolean {
-    return !this.isNumberValid;
+    return Object.keys(this.pnumber.errors ?? {}).length > 0;
   }
   isShowErrorNumberMsgValidation(): boolean {
     return this._showTextErrors && this.isShowErrorNumberControlValidation();

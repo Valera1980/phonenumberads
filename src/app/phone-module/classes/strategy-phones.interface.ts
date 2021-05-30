@@ -1,5 +1,5 @@
 import { TStrategiesPhone } from '../models/strategies';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CountryCode } from 'libphonenumber-js';
 
 export interface IPhoneDeals {
@@ -13,4 +13,6 @@ export interface IPhoneDeals {
     getValidationerrorMsg(countryName?: string, countryNameNative?: string): string;
     checkAllowedSymbols(s: string): boolean;
     replaceNotAllowedSymbols(s: string): string;
+    __setValidators(): void;
+    __getPhoneControl(): FormControl;
 }

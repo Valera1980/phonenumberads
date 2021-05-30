@@ -28,7 +28,7 @@
                
                 <div class="phone-input-wrapper__icon-wrapper">
                   <i  class="pi pi-copy phone-input-wrapper__copy-icon" 
-                    *ngIf="isNumberValid && pnumber.value?.length"
+                    *ngIf="!isShowErrorNumberControlValidation() && pnumber.value?.length"
                     (click)="copyNumber($event)">
                  </i>
                 </div>
