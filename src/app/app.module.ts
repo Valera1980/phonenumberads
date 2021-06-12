@@ -10,6 +10,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ProfileFormComponent } from './profile-form/profile-form.component';
 
+
 const firebaseConfig = {
   apiKey: 'AIzaSyAmfcnwI-1x5HrUGSX_KBXlZ--ZRCEC-GI',
   authDomain: 'phonecountriesconcepts.firebaseapp.com',
@@ -17,8 +18,10 @@ const firebaseConfig = {
   projectId: 'phonecountriesconcepts',
   storageBucket: 'phonecountriesconcepts.appspot.com',
   messagingSenderId: '23633471402',
-  appId: '1:23633471402:web:714ebdbc8c9678f00d6dd3'
+  appId: '1:23633471402:web:714ebdbc8c9678f00d6dd3',
+  measurementId: 'G-2KN7NXSY9T'
 };
+
 
 @NgModule({
   declarations: [
