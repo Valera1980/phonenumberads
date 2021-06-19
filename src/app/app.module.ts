@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ProfileFormComponent } from './profile-form/profile-form.component';
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 
 
 const firebaseConfig = {
@@ -35,7 +36,8 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    AngularFireAnalyticsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
